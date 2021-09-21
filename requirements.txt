@@ -5,3 +5,4 @@ Jinja2==3.0.1
 MarkupSafe==2.0.1
 Werkzeug==2.0.1
 kubernetes==18.20.0
+flask-classful
