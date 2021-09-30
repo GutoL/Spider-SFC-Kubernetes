@@ -1,0 +1,22 @@
+
+{
+    "name": "my-sfc",
+    "source": "minion-1",
+    "destination": "minion-4",
+    "VNFs":[
+            {"name":"vnf1",
+            "node":"minion-2",
+            "resources":{
+                "cpu": "1",
+                "memory": "200Mi"
+                }
+            },
+            {"name":"vnf2",
+             "node":"minion-3",
+             "resources":{
+               "cpu": "1",
+               "memory": "200Mi"
+               }
+            }
+        ]
+}
