@@ -3,7 +3,7 @@ import json
 class Utils:
 
     @staticmethod
-    def create_deployment_json(vnf_name, node_name, resources):
+    def create_deployment_json(vnf_name, node_name, replicas, resources):
         
         deployment_json_format = {
             "apiVersion": "apps/v1",
@@ -15,34 +15,37 @@ class Utils:
                 }
             },
             "spec": {
-                "replicas" : 1,
+                "replicas" : replicas,
                 "selector": {
                     "matchLabels" : {
                         "app":vnf_name
                     }
                 },
                 "template" : {
-                "metadata" : {
-                    "labels" : {
-                        "app":vnf_name
-                    }
-                },
-                "spec":{
-                    "containers":[
-                        {
-                            "name":vnf_name,
-                            "image":vnf_name+":latest",
-                            "ports":[
-                            {
-                                "containerPort": 5000 
-                            }
-                            ],
-                            "imagePullPolicy": "Never",
-                            "limits":resources
+                    "metadata" : {
+                        "labels" : {
+                            "app":vnf_name
                         }
-                    ]
+                    },
+                    "spec":{
+                        "containers":[
+                            {
+                                "name":vnf_name,
+                                "image":vnf_name+":latest",
+                                "ports":[
+                                    {
+                                        "containerPort": 5000 
+                                    }
+                                ],
+                                "imagePullPolicy": "Never",
+                                "limits":resources
+                            }
+                        ],
+                        "nodeSelector": {
+                            "nodetype": node_name
+                        }
+                    }
                 }
-            }
             }
         }
 

@@ -5,14 +5,16 @@
     "destination": "minion-4",
     "VNFs":[
             {"name":"vnf1",
-            "node":"minion-2",
+            "node":"main",
+            "replicas":1,
             "resources":{
                 "cpu": "1",
                 "memory": "200Mi"
                 }
             },
             {"name":"vnf2",
-             "node":"minion-3",
+             "node":"main",
+             "replicas":1,
              "resources":{
                "cpu": "1",
                "memory": "200Mi"

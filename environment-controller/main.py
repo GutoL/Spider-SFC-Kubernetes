@@ -44,12 +44,12 @@ class EnvironmentController(FlaskView):
             os.system(command) # we used the os.system command because we couldn't use the requests library to send the tar.gz file via post to the docker ¯\_(ツ)_/¯
             os.remove(self.config['dockerfile_name'])
 
-    def _create_k8s_deployment(self, vnf_name, node_name, resources):
+    def _create_k8s_deployment(self, vnf_name, node_name, replicas, resources):
         # curl --request POST --url http://localhost:8080/apis/apps/v1/namespaces/default/deployments --header 'content-type: application/json' --data '@deployment.json'
         
         headers = {'Content-type': 'application/json'}
 
-        json_content = Utils.create_deployment_json(vnf_name, node_name, resources)
+        json_content = Utils.create_deployment_json(vnf_name, node_name, replicas, resources)
         r = requests.post(url=self.config['k8s_url_deployments'], data=json_content, headers=headers)
         #print(r.json())
 
@@ -73,7 +73,7 @@ class EnvironmentController(FlaskView):
 
             self._create_docker_image(final_vnf_name, next_vnf, last_vnf, self.config['vnfs_path']+vnf['name']+'/')
             
-            self._create_k8s_deployment(final_vnf_name, vnf['node'], vnf['resources'])
+            self._create_k8s_deployment(final_vnf_name, vnf['node'], vnf['replicas'], vnf['resources'])
 
         return "ok\n"
 
