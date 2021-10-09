@@ -1,12 +1,27 @@
 import psutil
 from flask import Flask
-from flask_classful import FlaskView
+from flask_classful import FlaskView, route, request
 import sys
+
+import os
+import subprocess
 
 class MonitorDaemon(FlaskView):
 
     route_base = '/'
 
+    @route('/link_consumption', methods=['POST'])
+    def link_consumption(self)-> str:
+        sfc_json = request.json
+        
+        # getting usage data for current monthly period and converting it to a string
+        command = "vnstat -i "+str(sfc_json['interface'])+" --oneline | cut -d ';' -f 7"
+
+        output = subprocess.check_output(command, shell=True)
+        output = output.decode('utf8').replace('\n','')
+        return str(output)
+        
+    
     def _get_cpu_consumption(self):
         return psutil.cpu_percent()
     

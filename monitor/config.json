@@ -1,6 +1,13 @@
 {
     "machines":[
-        {"name":"minion-1","ip":"http://192.168.255.106","port":4000},
-        {"name":"minion-2","ip":"http://192.168.255.106","port":4001}   
+        {"name":"minion-1","ip":"http://192.168.255.106","port":4000}
+    ],
+    "links": [
+        {
+            "source":{"name":"minion-1","ip":"http://192.168.255.106"},
+            "destination":{"name":"router-1","ip":"http://192.168.255.1"},
+            "interface":"wlo1",
+            "port":4000
+        }
     ]
 }

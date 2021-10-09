@@ -12,14 +12,25 @@ class Monitor(FlaskView):
         f.close()
 
     def index(self):
-        response = ''
+        response = {"nodes":[],"links":[]}
         for machine in self.config['machines']:
             r = requests.get(machine['ip']+':'+str(machine['port']))
             r = r.json()
             r['name'] = machine['name']
-            response += json.dumps(r)+'\n'
+            response['nodes'].append(r)
         
-        return response
+        headers = {'Content-type': 'application/json'}
+        for link in self.config['links']:
+            url = link['source']['ip']+':'+str(link['port'])+'/link_consumption'
+            data = json.dumps({"interface":link["interface"]}, indent=4)
+            r = requests.post(url=url, data=data, headers=headers)
+            r = r.content.decode('utf8')
+            response['links'].append({"source":link['source']['name'],
+                                    "destination":link['destination']['name'],
+                                    "interface":link["interface"], 
+                                    "consumption":r})
+        
+        return json.dumps(response)+'\n'
 
 if __name__ == '__main__':
     app = Flask(__name__)
