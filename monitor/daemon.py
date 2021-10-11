@@ -3,10 +3,15 @@ from flask import Flask
 from flask_classful import FlaskView, route, request
 import sys
 
-import os
+import copy
+import json
 import subprocess
 
 class MonitorDaemon(FlaskView):
+    def __init__(self):
+        f = open('node_config.json')
+        self.node_config = json.load(f)
+        f.close()
 
     route_base = '/'
 
@@ -23,22 +28,44 @@ class MonitorDaemon(FlaskView):
         
     
     def _get_cpu_consumption(self):
-        return psutil.cpu_percent()
+        total_cpu = psutil.cpu_count(logical=False)
+        cpu_used = (total_cpu*psutil.cpu_percent())/100
+        return total_cpu - cpu_used # in cores
+    
+    def _get_total_cpu(self):
+        return psutil.cpu_count(logical=False) # in cores
     
     def _get_memory_consumption(self):
-        return psutil.virtual_memory().percent
-    
+        mem_available = psutil.virtual_memory().available
+        return float(mem_available)/ (1024 * 1024 * 1024) # in GB
+
+    def _get_total_memory(self):
+        mem_total = psutil.virtual_memory().total
+        return float(mem_total)/ (1024 * 1024 * 1024) # in GB
+
     def _get_storage_consumption(self, path='/'):
-        return psutil.disk_usage(path).percent
+        return float(psutil.disk_usage(path).free)/ (1024 * 1024 * 1024) # in GB
+
+    def _get_total_storage(self, path='/'):
+        return float(psutil.disk_usage(path).total)/ (1024 * 1024 * 1024) # in GB
 
     def index(self):
-        json = {
+
+        config = copy.deepcopy(self.node_config)
+
+        config['available_resources'] = {
             'cpu':self._get_cpu_consumption(),
             'memory':self._get_memory_consumption(),
             'storage': self._get_storage_consumption()
         }
-        return json
 
+        config['resources'] = {
+            'cpu':self._get_total_cpu(),
+            'memory':self._get_total_memory(),
+            'storage': self._get_total_storage()
+        }
+
+        return config
 
 
 if __name__ == '__main__':

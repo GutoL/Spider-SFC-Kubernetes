@@ -13,22 +13,20 @@ class Monitor(FlaskView):
 
     def index(self):
         response = {"nodes":[],"links":[]}
+        
         for machine in self.config['machines']:
             r = requests.get(machine['ip']+':'+str(machine['port']))
             r = r.json()
-            r['name'] = machine['name']
             response['nodes'].append(r)
         
         headers = {'Content-type': 'application/json'}
         for link in self.config['links']:
             url = link['source']['ip']+':'+str(link['port'])+'/link_consumption'
             data = json.dumps({"interface":link["interface"]}, indent=4)
+            
             r = requests.post(url=url, data=data, headers=headers)
             r = r.content.decode('utf8')
-            response['links'].append({"source":link['source']['name'],
-                                    "destination":link['destination']['name'],
-                                    "interface":link["interface"], 
-                                    "consumption":r})
+            response['links'].append({"interface":link["interface"], "consumption":r})
         
         return json.dumps(response)+'\n'
 
