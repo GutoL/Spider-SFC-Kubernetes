@@ -1,28 +1,44 @@
-{   
-    "id": "1", 
-    "original_id": "1", 
-    "name": "node_name_1", 
-    "type": "M", 
-    "peers": 4, 
-    "latitude": 19.994326843893894, 
-    "longitude": 73.78965468852559, 
-    "status": "operational", 
-    "resources": {"cpu": 10, "memory": 10, "storage": 10}, 
-    "available_resources": {"cpu": 10, "memory": 10, "storage": 10}, 
-    "node_cost": 500, 
-    "mttf": 2880, 
-    "mttr": 1.5, 
-    "availability": 0.9994794377928162, 
-    "energy": 20, 
-    "metadata": [], 
-    "capabilities": 
-        {"supported_VNFs": 
-            [
-                {"id": 0, "type": "load balance"},
-                {"id": 3, "type": "data compression"}, 
-                {"id": 2, "type": "DPI"}
-            ]
-        }, 
-    "ports": ["wlo1"],
-    "placed": {}
+{
+    "node":{   
+        "id": "1", 
+        "original_id": "1", 
+        "name": "node_1", 
+        "type": "M", 
+        "peers": 4, 
+        "latitude": 19.994326843893894, 
+        "longitude": 73.78965468852559, 
+        "status": "operational", 
+        "resources": {"cpu": 10, "memory": 10, "storage": 10}, 
+        "available_resources": {"cpu": 10, "memory": 10, "storage": 10}, 
+        "node_cost": 500, 
+        "mttf": 2880, 
+        "mttr": 1.5, 
+        "availability": 0.9994794377928162, 
+        "energy": 20, 
+        "metadata": [], 
+        "capabilities": 
+            {"supported_VNFs": 
+                [
+                    {"id": 0, "type": "load balance"},
+                    {"id": 3, "type": "data compression"}, 
+                    {"id": 2, "type": "DPI"}
+                ]
+            }, 
+        "ports": ["wlo1"],
+        "placed": {}
+    },
+
+
+    "links":[
+        {
+            "id":0,
+            "destination":{"id":"router-1","ip":"http://192.168.255.1", "port":"router-1-p1"},
+            "interface":"wlo1",
+            "type": "peer", 
+            "customer": "Guto",
+            "src_port": "1-p1", 
+            "resources": {"delay": 0.5564765526145907, "bandwidth": 10, "cost_link": 10}, 
+            "available_resources": {"delay": 0.5564765526145907, "bandwidth": 10, "cost_link": 10}
+        }
+    ]
 }

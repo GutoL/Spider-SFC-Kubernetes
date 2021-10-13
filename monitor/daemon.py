@@ -6,6 +6,7 @@ import sys
 import copy
 import json
 import subprocess
+import socket
 
 class MonitorDaemon(FlaskView):
     def __init__(self):
@@ -15,12 +16,10 @@ class MonitorDaemon(FlaskView):
 
     route_base = '/'
 
-    @route('/link_consumption', methods=['POST'])
-    def link_consumption(self)-> str:
-        sfc_json = request.json
-        
+    def link_consumption(self, interface)-> str:
+                
         # getting usage data for current monthly period and converting it to a string
-        command = "vnstat -i "+str(sfc_json['interface'])+" --oneline | cut -d ';' -f 7"
+        command = "vnstat -i "+str(interface)+" --oneline | cut -d ';' -f 7"
 
         output = subprocess.check_output(command, shell=True)
         output = output.decode('utf8').replace('\n','')
@@ -51,21 +50,37 @@ class MonitorDaemon(FlaskView):
 
     def index(self):
 
-        config = copy.deepcopy(self.node_config)
+        node_config = copy.deepcopy(self.node_config['node'])
 
-        config['available_resources'] = {
+        node_config['available_resources'] = {
             'cpu':self._get_cpu_consumption(),
             'memory':self._get_memory_consumption(),
             'storage': self._get_storage_consumption()
         }
 
-        config['resources'] = {
+        node_config['resources'] = {
             'cpu':self._get_total_cpu(),
             'memory':self._get_total_memory(),
             'storage': self._get_total_storage()
         }
 
-        return config
+        links_config = copy.deepcopy(self.node_config['links'])
+
+        all_links = []
+
+        for link in links_config:
+            bandwidth = self.link_consumption(link['interface'])
+            
+            host_name = socket.gethostname()
+            host_ip = 'http://'+socket.gethostbyname(host_name + '.local')
+            
+            port = link.pop('src_port')
+            link['source'] = {'id':node_config['id'], 'ip':host_ip,'port':port}
+            
+            link['available_resources']['bandwidth'] = bandwidth
+            all_links.append(link)
+
+        return {"node": node_config, "links":all_links}
 
 
 if __name__ == '__main__':

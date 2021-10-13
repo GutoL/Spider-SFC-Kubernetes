@@ -17,16 +17,9 @@ class Monitor(FlaskView):
         for machine in self.config['machines']:
             r = requests.get(machine['ip']+':'+str(machine['port']))
             r = r.json()
-            response['nodes'].append(r)
-        
-        headers = {'Content-type': 'application/json'}
-        for link in self.config['links']:
-            url = link['source']['ip']+':'+str(link['port'])+'/link_consumption'
-            data = json.dumps({"interface":link["interface"]}, indent=4)
-            
-            r = requests.post(url=url, data=data, headers=headers)
-            r = r.content.decode('utf8')
-            response['links'].append({"interface":link["interface"], "consumption":r})
+            response['nodes'].append(r['node'])
+            for l in r['links']:
+                response['links'].append(l)
         
         return json.dumps(response)+'\n'
 
