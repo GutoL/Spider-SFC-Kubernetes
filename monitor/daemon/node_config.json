@@ -32,7 +32,7 @@
     "links":[
         {
             "id":0,
-            "destination":{"id":"router-1","ip":"http://192.168.255.1", "port":"router-1-p1"},
+            "destination":{"id":"router-1","ip":"http://192.168.0.1", "port":"router-1-p1"},
             "interface":"wlo1",
             "type": "peer", 
             "customer": "Guto",

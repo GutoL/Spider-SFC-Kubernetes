@@ -21,7 +21,7 @@ class Monitor(FlaskView):
             for l in r['links']:
                 response['links'].append(l)
         
-        return json.dumps(response)+'\n'
+        return response
 
 if __name__ == '__main__':
     app = Flask(__name__)

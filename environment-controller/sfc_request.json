@@ -5,7 +5,7 @@
     "destination": "minion-4",
     "VNFs":[
             {"name":"vnf1",
-            "node":"main",
+            "node":"minion-1",
             "replicas":1,
             "resources":{
                 "cpu": "1",
@@ -13,7 +13,7 @@
                 }
             },
             {"name":"vnf2",
-             "node":"main",
+             "node":"minion-2",
              "replicas":1,
              "resources":{
                "cpu": "1",
