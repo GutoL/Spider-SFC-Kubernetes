@@ -35,7 +35,7 @@ def graph_from_monitor(ip):
 
 if __name__ == '__main__':
     # Define if this code will be either a thread or an API
-    ip = "http://192.168.0.184:5000/"    
+    ip = "http://192.168.0.209:5000/"    
     infrastructure_graph = graph_from_monitor(ip)
 
     graph_handler = GraphHandler("mongodb://localhost:27017/")

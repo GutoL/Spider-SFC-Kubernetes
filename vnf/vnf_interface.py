@@ -42,7 +42,7 @@ class VNF(FlaskView, metaclass=abc.ABCMeta):
 
         url = 'http://'+str(next_vnf)+':'+str(port)+'/'
         r = requests.post(url=url, data=data)
-	data = json.dumps(r.text) # r.json()
+        data = json.dumps(r.text) # r.json()
         
         # return data
 

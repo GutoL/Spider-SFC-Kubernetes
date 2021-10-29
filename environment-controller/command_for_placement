@@ -1,0 +1,1 @@
+curl -X POST -H "Content-Type: application/json" -d @sfc_request.json http://192.168.0.181:5000/sfc

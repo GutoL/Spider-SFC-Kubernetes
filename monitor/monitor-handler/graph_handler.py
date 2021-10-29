@@ -18,12 +18,12 @@ class GraphHandler():
     mydb = self._create_connection(database_name)
 
     all_nodes = []
-    for node in infrastructure_graph.nodes:
-      all_nodes.append(infrastructure_graph.nodes[node])
+    for node in graph.nodes:
+      all_nodes.append(graph.nodes[node])
 
     all_edges = []
-    for edge in infrastructure_graph.edges:
-      all_edges.append(infrastructure_graph.edges[edge])
+    for edge in graph.edges:
+      all_edges.append(graph.edges[edge])
 
     mycol = mydb["nodes"]
     x = mycol.insert_many(all_nodes)
@@ -71,7 +71,7 @@ class GraphHandler():
     myclient = pymongo.MongoClient("mongodb://localhost:27017/")
     myclient.drop_database(db_name)
 
-
+'''
 # --------------------------------------------------------------------------------
 resources_ranges = {
     'cpu': 10,
@@ -103,7 +103,7 @@ infrastructure_graph = InfrastructureGraph(graph_as=graph_as,AS_number=50,latitu
                                   add_clusters=True)
 
 graph_handler = GraphHandler("mongodb://localhost:27017/")
-db_name = "infrastructure"
+db_name = "infrastructure" #'''
 
 ## Saving graph
 # graph_handler.graph_to_db(infrastructure_graph, db_name)

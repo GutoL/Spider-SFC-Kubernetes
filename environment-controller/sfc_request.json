@@ -13,7 +13,7 @@
                 }
             },
             {"name":"vnf2",
-             "node":"minion-2",
+             "node":"minion-1",
              "replicas":1,
              "resources":{
                "cpu": "1",

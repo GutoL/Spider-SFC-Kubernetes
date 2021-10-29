@@ -21,7 +21,7 @@ class EnvironmentController(FlaskView):
     def _create_compressed_dockerfile(self, vnf_files_path, file_name):
         try:
             tar = tarfile.open(file_name, "w:gz")
-            filenames = os.listdir(vnf_files_path)
+            filenames = os.listdir(vnf_files_path+'/')
             
             for filename in filenames:
                 tar.add(vnf_files_path+filename, arcname=filename)
@@ -32,7 +32,8 @@ class EnvironmentController(FlaskView):
 
     def _create_docker_image(self, image_name, next_vnf, last_vnf, vnf_files_path, node_name):
 
-        vnf_json_config = {"next_vnf": next_vnf, "last_vnf": last_vnf, "port":self.config['vnf_port'] }
+        vnf_json_config = {"next_vnf": next_vnf, "last_vnf": last_vnf, "port":self.config['vnf_port']}
+
         with open(vnf_files_path+'/config_vnf.json', 'w', encoding='utf-8') as f:
             json.dump(vnf_json_config, f, ensure_ascii=False, indent=4)
 
@@ -77,7 +78,7 @@ class EnvironmentController(FlaskView):
                 next_vnf = sfc_json['VNFs'][i+1]['name']            
 
             self._create_docker_image(final_vnf_name, next_vnf, last_vnf, 
-                                    self.config['vnfs_path']+vnf['name']+'/',node_name)
+                                    self.config['vnfs_path']+vnf['name'],node_name)
             self._create_k8s_deployment(final_vnf_name, vnf['node'], vnf['replicas'], vnf['resources'])
 
         return "ok\n"
