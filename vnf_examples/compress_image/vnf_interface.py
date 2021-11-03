@@ -22,7 +22,7 @@ class VNF(FlaskView, metaclass=abc.ABCMeta):
             content = request.json
         elif self.vnf_config['input_type'] == 'file':
             content = request.files['file']
-            
+        
         processed_data = self._process_data(content)
 
         try:
