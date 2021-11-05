@@ -1,6 +1,5 @@
 { 
     "next_vnf": "sfc1-vnf2",
     "last_vnf":false,
-    "port": 5000,
-    "input_type": "file"
+    "port": 5000
 }

@@ -16,14 +16,10 @@ class VNF(FlaskView, metaclass=abc.ABCMeta):
         vnf_config = json.load(fp)
         self.vnf_config = vnf_config
     
-    @route('/', methods=['POST'])
+    @route('/', methods=['POST', 'GET'])
     def index(self) -> str:
-        if self.vnf_config['input_type'] == 'json':
-            content = request.json
-        elif self.vnf_config['input_type'] == 'file':
-            content = request.files['file']
-            
-        processed_data = self._process_data(content)
+        
+        processed_data = self._process_data(request)
 
         try:
             self._forward_data(processed_data)
@@ -51,8 +47,8 @@ class VNF(FlaskView, metaclass=abc.ABCMeta):
         # return data
 
 class MyVNF(VNF):
-    def _process_data(self, data):
-        return data
+    def _process_data(self, request):
+        return request.json
 
 if __name__ == '__main__':
     app = Flask(__name__)

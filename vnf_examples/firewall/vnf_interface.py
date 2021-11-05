@@ -16,7 +16,7 @@ class VNF(FlaskView, metaclass=abc.ABCMeta):
         vnf_config = json.load(fp)
         self.vnf_config = vnf_config
     
-    @route('/', methods=['POST','GET'])
+    @route('/', methods=['POST', 'GET'])
     def index(self) -> str:
         
         processed_data = self._process_data(request)

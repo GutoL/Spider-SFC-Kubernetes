@@ -1,4 +1,4 @@
-from flask import Flask, json, request, jsonify
+from flask import Flask, json, jsonify
 
 import numpy as np
 import cv2
@@ -18,9 +18,9 @@ class NumpyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-class MyVNF(VNF):
-    def _process_data(self, data):
-        img = Image.open(data)
+class ImageCompressor(VNF):
+    def _process_data(self, request):
+        img = Image.open(request.files['file'])
         img = np.array(img)
         img = cv2.resize(img,(224,224))
         img = cv2.cvtColor(np.array(img), cv2.COLOR_BGR2RGB)
@@ -38,6 +38,6 @@ class MyVNF(VNF):
 if __name__ == '__main__':
     app = Flask(__name__)
     
-    my_vnf = MyVNF(vnf_config_file='config_vnf.json')
+    my_vnf = ImageCompressor(vnf_config_file='config_vnf.json')
     my_vnf.register(app)
     app.run(host="0.0.0.0", port=5000, debug=True)
