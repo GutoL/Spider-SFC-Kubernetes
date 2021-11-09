@@ -72,10 +72,10 @@ class EnvironmentController(FlaskView):
             
             if i == len(sfc_json['VNFs'])-1:
                 last_vnf = True
-                next_vnf = 'destination'
+                next_vnf = sfc_json['name']+'-destination'
             else:
                 last_vnf = False
-                next_vnf = sfc_json['VNFs'][i+1]['name']            
+                next_vnf = sfc_json['name']+'-'+sfc_json['VNFs'][i+1]['name']+'-service'       
 
             self._create_docker_image(final_vnf_name, next_vnf, last_vnf, 
                                     self.config['vnfs_path']+vnf['name'],node_name)

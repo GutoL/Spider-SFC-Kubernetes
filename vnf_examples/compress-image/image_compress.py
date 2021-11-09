@@ -33,7 +33,7 @@ class ImageCompressor(VNF):
 
         fact_resp = {'image':dumped} 
         
-        return jsonify(fact_resp)
+        return fact_resp
 
 if __name__ == '__main__':
     app = Flask(__name__)

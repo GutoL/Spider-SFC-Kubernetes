@@ -7,9 +7,7 @@ idna==3.3
 itsdangerous==2.0.1
 Jinja2==3.0.2
 MarkupSafe==2.0.1
-numpy==1.21.3
-opencv-python==4.5.4.58
-Pillow==8.4.0
 requests==2.26.0
 urllib3==1.26.7
 Werkzeug==2.0.2
+kubernetes==19.15.0

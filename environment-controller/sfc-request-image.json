@@ -11,6 +11,14 @@
                 "cpu": "1",
                 "memory": "200Mi"
                 }
+            },
+            {"name":"firewall",
+                "node":"minion-1",
+                "replicas":1,
+                "resources":{
+                    "cpu": "1",
+                    "memory": "200Mi"
+                    }
             }
         ]
 }

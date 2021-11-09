@@ -10,4 +10,4 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 COPY . /app
 EXPOSE 5000
-CMD [ "python", "function.py"]
+CMD [ "python", "image_compress.py"]
