@@ -17,8 +17,10 @@ files = {
 }
 
 first_vnf_service_name = 'my-sfc-compress-image-service'
+vnf_port = 5000
+
 url = get_vnf_service_ip(first_vnf_service_name)
-url = 'http://'+str(url)+':5000'
+url = 'http://'+str(url)+':'+str(vnf_port)
 
 response = requests.post(url, files=files)
 print(response.content)
