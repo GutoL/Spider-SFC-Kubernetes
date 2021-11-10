@@ -1,0 +1,30 @@
+
+{
+    "name": "my-sfc",
+    "source": "minion-1",
+    "destination": "minion-4",
+    "VNFs":[
+            {"name":"compress-image",
+            "resources":{
+                "cpu": 1,
+                "memory": 200,
+                "storage": 1000
+                }
+            },
+            {"name":"firewall",
+                "resources":{
+                    "cpu": 1,
+                    "memory": 200,
+                    "storage": 1000
+                }
+            }
+    ],
+    "flow_entries":[
+        {"source":"source","destination":"compress-image", "bandwidth": 1, "cost":1},
+        {"source":"compress-image","destination":"firewall", "bandwidth": 1, "cost":1},
+        {"source":"firewall","destination":"destination", "bandwidth": 1, "cost":1}
+    ],
+    "requirements":{
+        "availability": 0.995
+    }
+}
