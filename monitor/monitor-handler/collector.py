@@ -1,6 +1,10 @@
 import requests
 import networkx as nx
+from networkx.readwrite import json_graph
+
 from graph_handler import GraphHandler
+
+from flask import Flask
 
 def graph_from_monitor(ip):
     r = requests.get(ip)
@@ -33,7 +37,8 @@ def graph_from_monitor(ip):
 
     return G
 
-if __name__ == '__main__':
+@app.route("/",, methods=['GET'])
+def index():
     # Define if this code will be either a thread or an API
     ip = "http://192.168.0.209:5000/"    
     infrastructure_graph = graph_from_monitor(ip)
@@ -54,3 +59,10 @@ if __name__ == '__main__':
     # for edge in infrastructure_graph.edges:
     #     print(edge, infrastructure_graph.edges[edge])
     #     print('--------------')
+
+    return json_graph.dumps(infrastructure_graph)
+
+if __name__ == '__main__':
+
+    app = Flask(__name__)
+
