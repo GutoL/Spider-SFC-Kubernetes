@@ -12,19 +12,20 @@ class Monitor(FlaskView):
         f.close()
 
     def index(self):
-        response = {"nodes":[],"links":[]}
+        response = {"nodes":[],"edges":[]}
         
         for machine in self.config['machines']:
             r = requests.get(machine['ip']+':'+str(machine['port']))
             r = r.json()
             response['nodes'].append(r['node'])
+
             for l in r['links']:
-                response['links'].append(l)
+                response['edges'].append(l)
         
         return response
 
 if __name__ == '__main__':
     app = Flask(__name__)
     Monitor.register(app)
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
 

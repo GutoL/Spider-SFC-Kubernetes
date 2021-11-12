@@ -1,6 +1,7 @@
 import requests
 import networkx as nx
 from networkx.readwrite import json_graph
+import copy
 
 from graph_handler import GraphHandler
 
@@ -13,14 +14,19 @@ def graph_from_monitor(ip):
     G = nx.Graph()
 
     all_components = []
+    
     for node in data['nodes']:
-        node_id = node.pop('id')
+        # node_id = node.pop('id')
+        
+        node_id = node['id']
+
         all_components.append((node_id,node))
+        # print(i, node_id)
     
     G.add_nodes_from(all_components)
     
     all_components = []
-    for link in data['links']:
+    for link in data['edges']:
         
         source = link.pop('source')
         destination = link.pop('destination')
@@ -35,19 +41,29 @@ def graph_from_monitor(ip):
     
     G.add_edges_from(all_components)
 
+    for node in G.nodes:
+        if 'id' not in G.nodes[node]:
+            G.nodes[node]['id'] = node
+
     return G
 
-@app.route("/",, methods=['GET'])
+app = Flask(__name__)
+
+@app.route("/", methods=['GET'])
 def index():
     # Define if this code will be either a thread or an API
     ip = "http://192.168.0.209:5000/"    
     infrastructure_graph = graph_from_monitor(ip)
 
+    # for edge in infrastructure_graph.edges:
+    #     print(infrastructure_graph.edges[edge])
+        # break
+
     graph_handler = GraphHandler("mongodb://localhost:27017/")
     db_name = "infrastructure"
 
     # Saving graph
-    graph_handler.graph_to_db(infrastructure_graph, db_name)
+    graph_handler.graph_to_db(copy.deepcopy(infrastructure_graph), db_name)
 
     # print('Number of nodes:',infrastructure_graph.number_of_nodes())
     # print('Number of edges:',graph.number_of_edges())
@@ -60,9 +76,11 @@ def index():
     #     print(edge, infrastructure_graph.edges[edge])
     #     print('--------------')
 
-    return json_graph.dumps(infrastructure_graph)
+    data = json_graph.node_link_data(infrastructure_graph)
+    
+    return data
 
 if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=4999, debug=True)
 
-    app = Flask(__name__)
 

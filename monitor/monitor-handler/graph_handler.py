@@ -1,15 +1,15 @@
 from infra import InfrastructureGraph
 import pymongo
 import networkx as nx
-
+from pymongo.errors import BulkWriteError
 
 class GraphHandler():
   def __init__(self, url):
     self.url = url
   
   def _create_connection(self, database_name):
-    myclient = pymongo.MongoClient(self.url)
-    mydb = myclient[database_name]
+    self.myclient = pymongo.MongoClient(self.url)
+    mydb = self.myclient[database_name]
 
     return mydb
 
@@ -19,17 +19,29 @@ class GraphHandler():
 
     all_nodes = []
     for node in graph.nodes:
+      graph.nodes[node]['_id'] = graph.nodes[node]['id']
       all_nodes.append(graph.nodes[node])
 
     all_edges = []
     for edge in graph.edges:
+      graph.edges[edge]['_id'] = graph.edges[edge]['src_node']+'-'+graph.edges[edge]['dst_node']
       all_edges.append(graph.edges[edge])
 
-    mycol = mydb["nodes"]
-    x = mycol.insert_many(all_nodes)
+    try:
+      mycol = mydb["nodes"]
+      x = mycol.insert_many(all_nodes)
+    except BulkWriteError as e:
+      # print(e)
+      pass
 
-    mycol = mydb["edges"]
-    x = mycol.insert_many(all_edges)
+    try:
+      mycol = mydb["edges"]
+      x = mycol.insert_many(all_edges)
+    except BulkWriteError as e:
+      # print(e)
+      pass
+
+    self.myclient.close()
     
 
   def db_to_graph(self, database_name):
@@ -44,6 +56,8 @@ class GraphHandler():
     mycol = mydb['edges']
     all_edges = [(int(edge['src_node']), int(edge['dst_node']), edge) for edge in list(mycol.find())]
     G.add_edges_from(all_edges)
+
+    self.myclient.close()
     
     return G
 
@@ -56,6 +70,8 @@ class GraphHandler():
     newvalues = {"$set": new_data}
 
     mycol.update_one(myquery, newvalues)
+
+    self.myclient.close()
   
   def update_ege(self, database_name, source_node_id, destination_node_id, new_data):
     mydb = self._create_connection(database_name)
@@ -66,6 +82,8 @@ class GraphHandler():
     newvalues = {"$set": new_data}
 
     mycol.update_one(myquery, newvalues)
+
+    self.myclient.close()
 
   def delete_graph_from_db(self, db_name):
     myclient = pymongo.MongoClient("mongodb://localhost:27017/")
