@@ -43,7 +43,7 @@ def graph_from_monitor(ip):
 
     for node in G.nodes:
         if 'id' not in G.nodes[node]:
-            G.nodes[node]['id'] = node
+            G.nodes[node]['id'] = node         
 
     return G
 
@@ -52,7 +52,7 @@ app = Flask(__name__)
 @app.route("/", methods=['GET'])
 def index():
     # Define if this code will be either a thread or an API
-    ip = "http://192.168.0.209:5000/"    
+    ip = "http://192.168.0.209:4997/" # MONITOR IP
     infrastructure_graph = graph_from_monitor(ip)
 
     # for edge in infrastructure_graph.edges:

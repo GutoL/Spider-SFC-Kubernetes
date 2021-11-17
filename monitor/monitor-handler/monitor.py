@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_classful import FlaskView #, route, request
+from flask_classful import FlaskView, route #, request
 import json
 import requests
 
@@ -11,7 +11,8 @@ class Monitor(FlaskView):
         self.config = json.load(f)
         f.close()
 
-    def index(self):
+    @route('/data', methods=['GET'])
+    def get_data(self):
         response = {"nodes":[],"edges":[]}
         
         for machine in self.config['machines']:
@@ -27,5 +28,5 @@ class Monitor(FlaskView):
 if __name__ == '__main__':
     app = Flask(__name__)
     Monitor.register(app)
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=4997, debug=True)
 

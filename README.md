@@ -34,10 +34,10 @@ start the daemon: python3 daemon/daemon.py
 
 *** On the main node:
 check the status of mongoDB: systemctl status mongod.service
-if the mongDB is not running, start it: sudo service mongod start
+if the mongDB is not running, start it: sudo systemctl start mongod.service
 start the monitor: monitor/monitor-handler/monitor.py
-start the collector: python monitor/monitor-handler/python collector.py
+start the collector: python monitor/monitor-handler/collector.py
 start the agent: python agent/agent.py
 start the orchestrator: python orchestrator/orchestrator.py
-to call the orchestrator: curl -X POST -H "Content-Type: application/json" -d @orchestrator/sfc-request-image.json http://192.168.0.209:4100/sfc
+to call the orchestrator: curl -X POST -H "Content-Type: application/json" -d @orchestrator/sfc-request-image.json http://192.168.0.209:4996/sfc
 

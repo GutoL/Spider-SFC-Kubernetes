@@ -19,9 +19,8 @@
         "capabilities": 
             {"supported_VNFs": 
                 [
-                    {"id": 0, "type": "load balance"},
-                    {"id": 3, "type": "data compression"}, 
-                    {"id": 2, "type": "DPI"}
+                    {"id": 0, "type": "compress-image"},
+                    {"id": 1, "type": "firewall"}
                 ]
             }, 
         "ports": ["wlo1"],
