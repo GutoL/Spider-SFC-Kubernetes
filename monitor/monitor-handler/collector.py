@@ -17,17 +17,19 @@ def graph_from_monitor(ip):
     
     for node in data['nodes']:
         # node_id = node.pop('id')
-        
         node_id = node['id']
-
         all_components.append((node_id,node))
-        # print(i, node_id)
     
     G.add_nodes_from(all_components)
     
+    gw_nodes = {}
     all_components = []
+
     for link in data['edges']:
         
+        if link['destination']['id'] not in gw_nodes:
+            gw_nodes[link['destination']['id']] = link['destination']
+
         source = link.pop('source')
         destination = link.pop('destination')
 
@@ -41,9 +43,7 @@ def graph_from_monitor(ip):
     
     G.add_edges_from(all_components)
 
-    for node in G.nodes:
-        if 'id' not in G.nodes[node]:
-            G.nodes[node]['id'] = node         
+    nx.set_node_attributes(G, gw_nodes) # adding attributes to gateway nodes
 
     return G
 
@@ -52,7 +52,7 @@ app = Flask(__name__)
 @app.route("/", methods=['GET'])
 def index():
     # Define if this code will be either a thread or an API
-    ip = "http://192.168.0.209:4997/" # MONITOR IP
+    ip = "http://192.168.0.209:4997/data" # MONITOR IP
     infrastructure_graph = graph_from_monitor(ip)
 
     # for edge in infrastructure_graph.edges:
