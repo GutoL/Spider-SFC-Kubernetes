@@ -3,7 +3,7 @@ from pymongo.errors import BulkWriteError
 
 class DataBaseManager():
     
-    def __init__(self, url="mongodb://localhost:27017/", db_name="SPIDER"):
+    def __init__(self, url: str = "mongodb://localhost:27017/", db_name: str = "SPIDER"):
         self.url = url
         self.db_name = db_name
   
@@ -16,7 +16,7 @@ class DataBaseManager():
     def close_connection(self):
         self.myclient.close()
 
-    def insert_data_into_collection(self, collection_name, data):
+    def insert_data_into_collection(self, collection_name: str, data: dict):
         
         my_db = self.create_connection()
         my_collection = my_db[collection_name]
@@ -36,50 +36,60 @@ class DataBaseManager():
         
         self.close_connection()
     
-    def get_all_collection_data(self, collection_name):
-        my_db = self.create_connection()
-
+    def get_all_collection_data(self, collection_name: str):
+        
         try:
+            my_db = self.create_connection()
+
             my_collection = my_db[collection_name]
             cursor = my_collection.find({})
             
             data = []
             for document in cursor:
                 data.append(document)
-            
+
+            self.close_connection()
+                
             return data
         except BulkWriteError as e:
             pass
-            
-        self.close_connection()
+           
+        
     
-    def update_collection_data(self, collection_name, id, new_data):
-        my_db = self.create_connection()
-
+    def update_collection_data(self, collection_name: str, key: str, key_value: str, new_data: dict):
+        
         try:
+            my_db = self.create_connection()
+
             my_collection = my_db[collection_name]
 
-            myquery = {"id": str(id)}
+            myquery = {key: key_value}
             newvalues = {"$set": new_data}
 
             my_collection.update_one(myquery, newvalues)
+
+            self.close_connection()
+
         except BulkWriteError as e:
             pass
 
-        self.close_connection()
+        
 
-    def delete_collection_data(self, collection_name, id):
+    def delete_collection_data(self, collection_name: str, name: str):
 
-        my_db = self.create_connection()
+        
 
         try:
+            my_db = self.create_connection()
             my_collection = my_db[collection_name]
 
-            myquery = {"id": str(id)}
+            myquery = {"name": name}
             my_collection.delete_one(myquery)
+
+            self.close_connection()
 
         except BulkWriteError as e:
             pass
 
-        self.close_connection()
+        
 

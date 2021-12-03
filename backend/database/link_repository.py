@@ -4,13 +4,16 @@ from pymongo.errors import BulkWriteError
 class LinkRepository():
     def __init__(self) -> None:
         self.db_manager = DataBaseManager()
+        self.collection_name = 'links'
     
-    def inser_link(self, data):
-        self.db_manager.create_connection()
-
+    def insert_links(self, data: dict) -> None:
+        
         try:
-            self.db_manager.insert_data_into_collection('links', data)
+            self.db_manager.insert_data_into_collection(self.collection_name, data)
         except BulkWriteError as e:
                 # print(e)
                 pass
-        self.db_manager.close_connection()
+        
+    def update_link(self, new_data: dict, id: str) -> None:
+        self.db_manager.update_collection_data(self.collection_name, '_id', id, new_data)
+        
