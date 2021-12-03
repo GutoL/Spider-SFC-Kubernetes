@@ -1,4 +1,4 @@
-from infra import InfrastructureGraph
+# from infra import InfrastructureGraph
 import pymongo
 import networkx as nx
 from pymongo.errors import BulkWriteError

@@ -68,7 +68,7 @@ class EnvironmentController(FlaskView):
         
         for i, vnf in enumerate(sfc_json['VNFs']):
             final_vnf_name = sfc_json['name']+'-'+vnf['name']
-            node_name = vnf['node']
+            node_name = vnf['node_name']
             
             if i == len(sfc_json['VNFs'])-1:
                 last_vnf = True
@@ -79,7 +79,7 @@ class EnvironmentController(FlaskView):
 
             self._create_docker_image(final_vnf_name, next_vnf, last_vnf, 
                                     self.config['vnfs_path']+vnf['name'],node_name)
-            self._create_k8s_deployment(final_vnf_name, vnf['node'], vnf['replicas'], vnf['resources'])
+            self._create_k8s_deployment(final_vnf_name, vnf['node_name'], vnf['replicas'], vnf['resources'])
 
         return "ok\n"
 

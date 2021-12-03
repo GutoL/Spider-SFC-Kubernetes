@@ -41,7 +41,7 @@ class Orchestrator(FlaskView):
         print(response.json())
         
         # 3 - send the SFC request to the environment controller (main.py)
-        requests.post(self.config['environment_controller_ip']+'sfc',json=response.json(), headers=headers)
+        # requests.post(self.config['environment_controller_ip']+'sfc',json=response.json(), headers=headers)
         
         return ''
 

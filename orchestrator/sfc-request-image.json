@@ -1,8 +1,8 @@
 
 {
     "name": "my-sfc",
-    "source": "0",
-    "destination": "1",
+    "source": "master-node",
+    "destination": "minion-1",
     "VNFs":[
             {
                 "id":0,

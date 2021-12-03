@@ -34,8 +34,11 @@ class Agent(FlaskView):
             "name":   placement_req['sfc_info']['name'],
             "source": placement_req['sfc_info']['source'],
             "destination": placement_req['sfc_info']['destination'],
-            "VNFs": []
+            "VNFs": [],
+            "flow_entries": []
         }
+
+        temp_source_node = placement_req['sfc_info']['source']
 
         for i, vnf in enumerate(placement_req['vnfs']):
             candidate_nodes = igh.get_candidate_nodes(vnf['id'],
@@ -45,6 +48,8 @@ class Agent(FlaskView):
                                                     placement_req['flow_entries'][i]['resources'], k)
             
             nodes_consumption = igh.graph.get_nodes_consumption(aggregated=False, nodes=candidate_nodes)
+
+            nodes_names = list(nodes_consumption.keys())
 
             for node in nodes_consumption:
                 nodes_consumption[node]['availability'] = copy.copy(igh.graph.nodes[node]['availability'])
@@ -59,13 +64,32 @@ class Agent(FlaskView):
             # call the trained agent to select the candidate node and define the redundancy
             candidate_node, redundancy = self._define_placement(obs)
 
+            candidate_node = nodes_names[candidate_node]
+
             placement_decision['VNFs'].append(
                 {"name":vnf['name'],
-                 "node":igh.graph.nodes[str(candidate_node)]['name'],
+                 "node_name":igh.graph.nodes[str(candidate_node)]['name'],
                  "replicas":redundancy+1,
                  "resources":vnf['resources']
                 }
             )
+
+            shortest_path = nx.shortest_path(igh.graph,source=str(temp_source_node), target=str(candidate_node))
+
+            shortest_path_links = []
+            
+            for j in range(len(shortest_path)-1):
+                shortest_path_links.append((shortest_path[j], shortest_path[j+1]))
+
+            placement_decision['flow_entries'].append(
+                {
+                    "source": temp_source_node,
+                    "destination": candidate_node,
+                    "path": shortest_path_links
+                }
+            )
+
+            temp_source_node = candidate_node
 
         return placement_decision
     

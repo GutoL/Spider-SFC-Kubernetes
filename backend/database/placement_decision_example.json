@@ -1,0 +1,48 @@
+{
+    "VNFs": [
+        {
+            "name": "compress-image",
+            "node_name": "master-node",
+            "replicas": 1,
+            "resources": {
+                "cpu": 1,
+                "memory": 0.2,
+                "storage": 0.11
+            }
+        },
+        {
+            "name": "firewall",
+            "node_name": "minion-1",
+            "replicas": 1,
+            "resources": {
+                "cpu": 1,
+                "memory": 0.2,
+                "storage": 0.11
+            }
+        }
+    ],
+    "destination": "minion-1",
+    "flow_entries": [
+        {
+            "destination": "master-node",
+            "path": [],
+            "source": "master-node"
+        },
+        {
+            "destination": "minion-1",
+            "path": [
+                [
+                    "master-node",
+                    "router-1"
+                ],
+                [
+                    "router-1",
+                    "minion-1"
+                ]
+            ],
+            "source": "master-node"
+        }
+    ],
+    "name": "my-sfc",
+    "source": "master-node"
+}

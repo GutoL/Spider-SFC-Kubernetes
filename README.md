@@ -34,7 +34,7 @@ start the daemon: python3 daemon/daemon.py
 
 *** On the main node:
 check the status of mongoDB: systemctl status mongod.service
-if the mongDB is not running, start it: sudo systemctl start mongod.service
+if the mongDB is not running, start it: sudo ./environment-controller/start_mongo.sh (remember of enable the script to run: chmod +x environment-controller/start_mongo.sh)
 start the monitor: monitor/monitor-handler/monitor.py
 start the collector: python monitor/monitor-handler/collector.py
 start the agent: python agent/agent.py
