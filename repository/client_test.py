@@ -93,13 +93,22 @@ infra_data = {"name": "my_infra", "graph": infrastructure_graph}
 
 sfc_request_repository = SfcRequestRepository()
 
-# infra_repository.insert_infrastructure(infra_data)
-# sfc_request_repository.insert_sfc_request(sfc_request)
+# # create
+infra_repository.insert_infrastructure(infra_data)
+sfc_request_repository.insert_sfc_request(sfc_request)
 
-# for infra in infra_repository.get_all_infrastructures():
-#     print(infra)
+# # get
+# infras = infra_repository.get_all_infrastructures()
+# for x in infras:
+#     print(infras[x]['nodes'])
+#     print('----------------------')
+#     print(infras[x]['links'])
+  
+# # update
+# infra_data['name'] = 'teste'
+# infra_repository.update_infrastructure(infra_data, "my_infra")
 
-infra_data['name'] = 'teste'
-infra_repository.update_infrastructure(infra_data, "my_infra")
+# # delete
+# infra_repository.delete_infrastructure('my_infra')
 
 print('done!')

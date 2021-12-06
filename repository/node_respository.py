@@ -14,6 +14,12 @@ class NodeRepository():
                 # print(e)
                 pass
 
-    def update_node(self, new_data: dict, name: str) -> None:
-        self.db_manager.update_collection_data(self.collection_name, 'name', name, new_data)
+    def get_node_by_id(self, id: str):
+        return self.db_manager.get_data_by_id_or_name(self.collection_name, id)
+
+    def update_node(self, new_data: dict, id: str) -> None:
+        self.db_manager.update_collection_data(self.collection_name, '_id', id, new_data)
+
+    def delete_node(self, id: str):
+        self.db_manager.delete_collection_data(self.collection_name, id, '_id')
         

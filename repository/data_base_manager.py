@@ -54,7 +54,21 @@ class DataBaseManager():
         except BulkWriteError as e:
             pass
            
-        
+    def get_data_by_id_or_name(self, collection_name: str, id: str, key='_id') -> dict:
+        try:
+            my_db = self.create_connection()
+
+            my_collection = my_db[collection_name]
+
+            data = my_collection.find_one({key: id})
+
+            self.close_connection()
+
+            return data
+            
+        except BulkWriteError as e:
+            pass
+
     
     def update_collection_data(self, collection_name: str, key: str, key_value: str, new_data: dict):
         
@@ -75,15 +89,13 @@ class DataBaseManager():
 
         
 
-    def delete_collection_data(self, collection_name: str, name: str):
-
-        
+    def delete_collection_data(self, collection_name: str, value: str, key: str):
 
         try:
             my_db = self.create_connection()
             my_collection = my_db[collection_name]
 
-            myquery = {"name": name}
+            myquery = {key: value}
             my_collection.delete_one(myquery)
 
             self.close_connection()
