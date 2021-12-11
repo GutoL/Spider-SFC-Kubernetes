@@ -4,7 +4,7 @@ from pymongo.errors import BulkWriteError
 class NodeRepository():
     def __init__(self) -> None:
         self.db_manager = DataBaseManager()
-        self.collection_name = 'nodes'
+        self.collection_name = 'node'
 
     def insert_nodes(self, data: dict)->None:
         try:

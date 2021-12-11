@@ -5,7 +5,7 @@ from pymongo.errors import BulkWriteError
 class SfcRequestRepository():
     def __init__(self) -> None:
         self.db_manager = DataBaseManager()
-        self.collection_name = 'sfc_requests'
+        self.collection_name = 'sfc_request'
     
     def insert_sfc_request(self, sfc_request: dict)-> None:
         try:
@@ -32,3 +32,9 @@ class SfcRequestRepository():
         except BulkWriteError as e:
                 # print(e)
                 pass
+    
+    def get_all_sfcs(self):
+        return self.db_manager.get_all_collection_data(self.collection_name)
+    
+    def get_sfc_by_name(self, name: str):
+        self.db_manager.get_data_by_id_or_name(self.collection_name, name, 'name')

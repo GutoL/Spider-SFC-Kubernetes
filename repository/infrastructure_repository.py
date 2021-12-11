@@ -12,7 +12,7 @@ class InfrastructureRepository():
         self.db_manager = DataBaseManager()
         self.node_repository = NodeRepository()
         self.link_repository = LinkRepository()
-        self.collection_name = 'infrastructures'
+        self.collection_name = 'infrastructure'
     
     def prepare_infra_data(self, infrastructure: dict):
         
@@ -86,7 +86,7 @@ class InfrastructureRepository():
             result = self.db_manager.get_all_collection_data(self.collection_name)            
             
             for infra_data in result:
-                all_infrastructures[infra_data['_id']] = self.get_nodes_and_links_from_infra(infra_data)                
+                all_infrastructures[str(infra_data['_id'])] = self.get_nodes_and_links_from_infra(infra_data)                
                     
             return all_infrastructures
 

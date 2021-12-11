@@ -4,7 +4,7 @@ from pymongo.errors import BulkWriteError
 class LinkRepository():
     def __init__(self) -> None:
         self.db_manager = DataBaseManager()
-        self.collection_name = 'links'
+        self.collection_name = 'link'
     
     def insert_links(self, data: dict) -> None:
         

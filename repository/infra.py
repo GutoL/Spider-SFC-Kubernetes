@@ -43,7 +43,7 @@ class InfrastructureGraph(nx.MultiGraph):
     if self.graph_as == None:
       self.graph_as = nx.generators.internet_as_graphs.random_internet_as_graph(n=self.AS_number,seed=0)
     
-      if self.lat_list is None or self.long_list == None:
+      if self.lat_list.all == None or self.long_list.all == None:
         self.lat_list, self.long_list = self.generate_random_location(self.latitude,self.longitude,self.AS_number)
 
       attrs = {}

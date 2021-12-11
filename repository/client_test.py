@@ -2,9 +2,47 @@
 # import networkx as nx
 # from networkx.readwrite import json_graph
 # import copy
+import pandas as pd
 from infra import InfrastructureGraph
 from infrastructure_repository import InfrastructureRepository
 from sfc_request_repository import SfcRequestRepository
+from vnf_template_repository import VnfTemplateRepository
+
+vnfs = [
+    {
+      "name": "IDS",
+      "_id": "0",
+      "cpu": 1,
+      "memory": 1,
+      "storage": 1,
+      "mttf": 1,
+      "mttr": 1,
+      "availability": 1,
+      "path_to_files": "/home/catalog/ids"
+    },
+    {
+      "name": "Firewall",
+      "_id": "1",
+      "cpu": 1,
+      "memory": 1,
+      "storage": 1,
+      "mttf": 1,
+      "mttr": 1,
+      "availability": 1,
+      "path_to_files": "/home/catalog/firewall"
+    },
+    {
+      "name": "Compress",
+      "_id": "2",
+      "cpu": 1,
+      "memory": 1,
+      "storage": 1,
+      "mttf": 1,
+      "mttr": 1,
+      "availability": 1,
+      "path_to_files": "/home/catalog/compress"
+    }
+  ]
 
 # master-node = 0, minion-1 = 1, router-1 = 2
 sfc_request = {
@@ -78,9 +116,16 @@ vnf_list = [
           ]
 
 number_of_nodes = 10
+
+city_data = pd.read_csv('worldcities.csv')
+city_data = city_data[['lat','lng']].tail(number_of_nodes)
+
+lat_list = city_data['lat'].values
+long_list = city_data['lng'].values
+
 infrastructure_graph = InfrastructureGraph(graph_as=None,AS_number=number_of_nodes,
-                                            latitude=19.99,longitude=73.78,
-                                            lat_list=None, long_list=None,
+                                            latitude=None,longitude=None,
+                                            lat_list=lat_list, long_list=long_list,
                                             resources_ranges=resources_ranges,
                                             vnf_list=vnf_list,nodes_support_all_vnfs=False,
                                             add_fat_tree=False,
@@ -93,9 +138,12 @@ infra_data = {"name": "my_infra", "graph": infrastructure_graph}
 
 sfc_request_repository = SfcRequestRepository()
 
+vnf_template_repository = VnfTemplateRepository()
+
 # # create
 infra_repository.insert_infrastructure(infra_data)
 sfc_request_repository.insert_sfc_request(sfc_request)
+vnf_template_repository.insert_vnf_templates(vnfs)
 
 # # get
 # infras = infra_repository.get_all_infrastructures()
