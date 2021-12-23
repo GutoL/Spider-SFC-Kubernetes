@@ -23,8 +23,13 @@ class Agent(FlaskView):
         # for n in infrastructure_graph.nodes:
         #     print(n,infrastructure_graph.nodes[n])
         # print('----------')
-        # for e in infrastructure_graph.edges:
-        #     print(e, infrastructure_graph.edges[e])
+
+        for e in infrastructure_graph.edges:
+            if 'kbit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
+                infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'].replace(' kbit/s',''))
+            else:
+                infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'])
+            # print(e, infrastructure_graph.edges[e])
         
         igh = InfrastructureGraphHandler(infrastructure_graph)
 
@@ -47,11 +52,14 @@ class Agent(FlaskView):
                                                     vnf['resources'],
                                                     placement_req['flow_entries'][i]['resources'], k)
             
+            print('candidate_nodes',candidate_nodes)
             nodes_consumption = igh.graph.get_nodes_consumption(aggregated=False, nodes=candidate_nodes)
 
             nodes_names = list(nodes_consumption.keys())
 
             for node in nodes_consumption:
+                if type(node) == int and node < 0:
+                    continue
                 nodes_consumption[node]['availability'] = copy.copy(igh.graph.nodes[node]['availability'])
 
             nodes_consumption = [v2 for k1,v1 in nodes_consumption.items() for k2,v2 in v1.items()]
@@ -94,8 +102,9 @@ class Agent(FlaskView):
         return placement_decision
     
     def _define_placement(self, obs):
-        number_of_candidate_nodes = int((len(obs)-4)/4)-1
-        candidate = random.randint(0,number_of_candidate_nodes)
+        # number_of_candidate_nodes = int((len(obs)-4)/4)-1
+        # candidate = random.randint(0,number_of_candidate_nodes)
+        candidate = 0
 
         redundancy = random.randint(0,1)
 

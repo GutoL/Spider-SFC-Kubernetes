@@ -10,37 +10,24 @@ from vnf_template_repository import VnfTemplateRepository
 
 vnfs = [
     {
-      "name": "IDS",
+      "name": "firewall",
       "_id": "0",
-      "cpu": 1,
-      "memory": 1,
-      "storage": 1,
-      "mttf": 1,
-      "mttr": 1,
-      "availability": 1,
-      "path_to_files": "/home/catalog/ids"
-    },
-    {
-      "name": "Firewall",
-      "_id": "1",
-      "cpu": 1,
-      "memory": 1,
-      "storage": 1,
+      "id": "0",
+      "resources": {"cpu": 1,"memory": 1,"storage": 1},
       "mttf": 1,
       "mttr": 1,
       "availability": 1,
       "path_to_files": "/home/catalog/firewall"
     },
     {
-      "name": "Compress",
-      "_id": "2",
-      "cpu": 1,
-      "memory": 1,
-      "storage": 1,
+      "name": "compress-image",
+      "_id": "1",
+      "id": "1",
+      "resources": {"cpu": 1,"memory": 1,"storage": 1},
       "mttf": 1,
       "mttr": 1,
       "availability": 1,
-      "path_to_files": "/home/catalog/compress"
+      "path_to_files": "/home/catalog/compress-image"
     }
   ]
 
@@ -141,8 +128,8 @@ sfc_request_repository = SfcRequestRepository()
 vnf_template_repository = VnfTemplateRepository()
 
 # # create
-infra_repository.insert_infrastructure(infra_data)
-sfc_request_repository.insert_sfc_request(sfc_request)
+# infra_repository.insert_infrastructure(infra_data)
+# sfc_request_repository.insert_sfc_request(sfc_request)
 vnf_template_repository.insert_vnf_templates(vnfs)
 
 # # get
@@ -151,6 +138,7 @@ vnf_template_repository.insert_vnf_templates(vnfs)
 #     print(infras[x]['nodes'])
 #     print('----------------------')
 #     print(infras[x]['links'])
+# print(infra_repository.get_data_from_monitor("http://192.168.0.209:4997/data"))
   
 # # update
 # infra_data['name'] = 'teste'

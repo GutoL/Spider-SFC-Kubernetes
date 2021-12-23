@@ -21,7 +21,7 @@ class VNF(FlaskView, metaclass=abc.ABCMeta):
         
         processed_data = self._process_data(request)
 
-	if processed_data == None:
+        if processed_data == None:
             return 'Error! Flow blocked...'
 
         try:

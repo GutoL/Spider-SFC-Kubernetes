@@ -147,12 +147,17 @@ class InfrastructureGraphHandler():
   
   def get_candidate_nodes(self, vnf_id, source, destination, vnf_requirements,
                           flow_entry_requirements, k, link_weight='delay', consider_src_dst=True):
-    
+
     # selected_edges = [(u,v) for u,v,e in self.graph.edges(data=True) if e['resources']['bandwidth'] > flow_entry_requirements['bandwidth']]
-    temp_graph = nx.Graph(((u,v,e) for u,v,e in self.graph.edges(data=True) if e['resources']['bandwidth'] >= flow_entry_requirements['bandwidth']))
-    
+    temp_graph = nx.Graph(((u,v,e) for u,v,e in self.graph.edges(data=True) if e['available_resources']['bandwidth'] >= flow_entry_requirements['bandwidth']))
+
     nodes_attrs = {node:self.graph.nodes[node] for node in self.graph.nodes if node in temp_graph.nodes}
-    nx.set_node_attributes(temp_graph, nodes_attrs)    
+    nx.set_node_attributes(temp_graph, nodes_attrs)
+
+
+    for node in temp_graph.nodes:
+      print(temp_graph.nodes[node])
+    print('---------------')
     
     # nx.draw(temp_graph,with_labels=True)
     # plt.show()
@@ -168,19 +173,22 @@ class InfrastructureGraphHandler():
       if not consider_src_dst:
         if node == source or node == destination:
           continue
-
-      meet_requeriment = False
+        
+      if 'all' in temp_graph.nodes[node]['capabilities']['supported_VNFs']:
+        meet_requeriment = True
+      else:
+        meet_requeriment = False
       
-      # for vnf in self.graph.nodes[node]['capabilities']['supported_VNFs']:
-      for vnf in temp_graph.nodes[node]['capabilities']['supported_VNFs']:
-        if vnf_id == vnf['id']:
-          meet_requeriment = True
-          break
+        # for vnf in self.graph.nodes[node]['capabilities']['supported_VNFs']:
+        for vnf in temp_graph.nodes[node]['capabilities']['supported_VNFs']:
+          if vnf_id == vnf['id']:
+            meet_requeriment = True
+            break
 
       if meet_requeriment:
         for req in vnf_requirements:
           # if self.graph.nodes[node]['available_resources'][req] < vnf_requirements[req]:
-          # print('se liga node:',node,req,'resources',temp_graph.nodes[node]['available_resources'][req],'req',vnf_requirements[req])
+          # print(node,req,'resources',temp_graph.nodes[node]['available_resources'][req],'req',vnf_requirements[req])
           if temp_graph.nodes[node]['available_resources'][req] < vnf_requirements[req]:
             meet_requeriment = False
             break

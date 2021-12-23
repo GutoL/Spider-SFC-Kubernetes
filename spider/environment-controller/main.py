@@ -61,7 +61,7 @@ class EnvironmentController(FlaskView):
         json_content = Utils.create_service_json_format(vnf_name+'-service', vnf_name)
         r = requests.post(url=self.config['k8s_url_services'], data=json_content, headers=headers)
 
-    @route('/sfc', methods=['POST'])
+    @route('/sfc_request', methods=['POST'])
     def sfc(self)-> str:
         
         sfc_json = request.json

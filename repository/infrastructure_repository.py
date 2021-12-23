@@ -5,6 +5,10 @@ from copy import deepcopy
 from bson.dbref import DBRef
 from pymongo.errors import BulkWriteError
 
+import sys
+# insert at 1, 0 is the script path (or '' in REPL)
+sys.path.insert(1, '../spider/monitor/monitor-handler/')
+from collector import graph_from_monitor
 
 class InfrastructureRepository():
 
@@ -13,7 +17,35 @@ class InfrastructureRepository():
         self.node_repository = NodeRepository()
         self.link_repository = LinkRepository()
         self.collection_name = 'infrastructure'
-    
+        
+    def get_nodes_and_links_from_infra_monitor(self, infra_data):
+        new_infra_data = {}
+
+        nodes_list = []
+
+        for node in infra_data.nodes:
+            nodes_list.append(infra_data.nodes[node])
+        
+        new_infra_data['nodes'] = nodes_list
+
+        links_list = []
+        for edge in infra_data.edges:
+            links_list.append(infra_data.edges[edge])
+        
+        new_infra_data['links'] = links_list
+
+        return new_infra_data
+
+    def get_data_from_monitor(self, monitor_ip: str):
+        infra_data = graph_from_monitor(monitor_ip)
+        infra_data = self.get_nodes_and_links_from_infra_monitor(infra_data)
+
+        infra_data['name'] = "my_infra"
+        infra_data['id'] = "my_infra"
+
+        return infra_data
+        
+
     def prepare_infra_data(self, infrastructure: dict):
         
         graph = deepcopy(infrastructure['graph'])

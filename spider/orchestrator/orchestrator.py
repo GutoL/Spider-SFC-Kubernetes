@@ -12,19 +12,22 @@ class Orchestrator(FlaskView):
         self.config = json.load(f)
         f.close()
 
-    @route('/sfc', methods=['POST'])
+    @route('/sfc_request', methods=['POST'])
     def create_sfc(self)-> str:
         request_json = request.json
 
-        sfc_info = {'name':request_json['name'],
+        print('request_json',request_json['flow_entries'])
+        
+        sfc_info = {'name':request_json['name'].lower().replace(' ','-'),
                     'source':request_json['source'],
                     'destination':request_json['destination'],
                     'requirements':request_json['requirements']
                     }
 
+        
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
-        # 1 - get status of infrastructure from collector.py
+        # 1 - get status of infrastructure from monitor.py
         response = requests.get(self.config['monitor_ip']+'/data')
         graph_json = response.json()
 
@@ -35,14 +38,17 @@ class Orchestrator(FlaskView):
                 'sfc_info':sfc_info
                 }
 
+        print('source',sfc_info['source'],'destination',sfc_info['destination'])
+
         # 2 - call the agent to create the SFC request
         response = requests.post(self.config['agent_ip']+'placement',json=data, headers=headers)
         
-        print(response.json())
+        # print(response.json())
         
         # 3 - send the SFC request to the environment controller (main.py)
-        # requests.post(self.config['environment_controller_ip']+'sfc',json=response.json(), headers=headers)
-        
+        requests.post(self.config['environment_controller_ip']+'sfc_request',json=response.json(), headers=headers) # '''
+        print('Placement done!')
+
         return ''
 
 

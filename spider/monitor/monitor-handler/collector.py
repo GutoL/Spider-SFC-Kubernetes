@@ -17,6 +17,7 @@ def graph_from_monitor(ip):
     
     for node in data['nodes']:
         # node_id = node.pop('id')
+        node['_id'] = node['id']
         node_id = node['id']
         all_components.append((node_id,node))
     
@@ -28,6 +29,7 @@ def graph_from_monitor(ip):
     for link in data['edges']:
         
         if link['destination']['id'] not in gw_nodes:
+            link['destination']['_id'] = link['destination']['id']
             gw_nodes[link['destination']['id']] = link['destination']
 
         source = link.pop('source')
