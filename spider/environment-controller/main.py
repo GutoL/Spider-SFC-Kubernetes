@@ -77,6 +77,8 @@ class EnvironmentController(FlaskView):
                 last_vnf = False
                 next_vnf = sfc_json['name']+'-'+sfc_json['VNFs'][i+1]['name']+'-service'       
 
+            # print('vnf:', final_vnf_name, 'last vnf:', last_vnf)
+
             self._create_docker_image(final_vnf_name, next_vnf, last_vnf, 
                                     self.config['vnfs_path']+vnf['name'],node_name)
             self._create_k8s_deployment(final_vnf_name, vnf['node_name'], vnf['replicas'], vnf['resources'])
@@ -87,7 +89,7 @@ app = Flask(__name__)
 EnvironmentController.register(app)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True)
     # ec = EnvironmentController()
     # ec._create_docker_image(image_name = 'sfc1_teste', files_path = '/home/guto/Desktop/vnf1/')
     

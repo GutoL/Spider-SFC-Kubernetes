@@ -8,6 +8,8 @@ from infrastructure_repository import InfrastructureRepository
 from sfc_request_repository import SfcRequestRepository
 from vnf_template_repository import VnfTemplateRepository
 
+basic_path = "/home/guto/vnf_catalog/"
+
 vnfs = [
     {
       "name": "firewall",
@@ -17,7 +19,7 @@ vnfs = [
       "mttf": 1,
       "mttr": 1,
       "availability": 1,
-      "path_to_files": "/home/catalog/firewall"
+      "path_to_files": basic_path+"firewall"
     },
     {
       "name": "compress-image",
@@ -27,7 +29,17 @@ vnfs = [
       "mttf": 1,
       "mttr": 1,
       "availability": 1,
-      "path_to_files": "/home/catalog/compress-image"
+      "path_to_files": basic_path+"compress-image"
+    },
+    {
+      "name": "face-detection",
+      "_id": "2",
+      "id": "2",
+      "resources": {"cpu": 1,"memory": 1,"storage": 1},
+      "mttf": 1,
+      "mttr": 1,
+      "availability": 1,
+      "path_to_files": basic_path+"face-detection"
     }
   ]
 

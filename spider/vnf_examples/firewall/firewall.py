@@ -9,8 +9,10 @@ class Firewall(VNF):
 
         ip_client = request.environ['REMOTE_ADDR']
         port_client = request.environ['REMOTE_PORT']
+
+        # print('ip_client',ip_client, 'port_client',port_client)
         
-        f = open('firewallrules.json',)
+        f = open('firewallrules.json')
         config = json.load(f)
 
         if ip_client in config['ListOfBannedIpAddr']:

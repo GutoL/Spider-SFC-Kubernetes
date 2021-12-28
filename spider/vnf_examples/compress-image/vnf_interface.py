@@ -18,10 +18,9 @@ class VNF(FlaskView, metaclass=abc.ABCMeta):
     
     @route('/', methods=['POST', 'GET'])
     def index(self) -> str:
-        
         processed_data = self._process_data(request)
-	
-	if processed_data == None:
+        
+        if processed_data == None:
             return 'Error! Flow blocked...'
 
         try:
@@ -34,6 +33,7 @@ class VNF(FlaskView, metaclass=abc.ABCMeta):
             else:
                 response = 'Error!'
 
+        # print(processed_data['data'])
         return response
 
     @abc.abstractmethod
@@ -58,7 +58,11 @@ class VNF(FlaskView, metaclass=abc.ABCMeta):
         port = self.vnf_config['port']
 
         url = 'http://'+str(next_vnf)+':'+str(port)+'/'
-        r = requests.post(url=url, data=data)
+
+        headers = {'Content-type': 'application/json'}
+
+        r = requests.post(url=url, json=data, headers=headers)
+        
         data = json.dumps(r.text) # r.json()
         
         return data

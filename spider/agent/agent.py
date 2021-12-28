@@ -27,6 +27,8 @@ class Agent(FlaskView):
         for e in infrastructure_graph.edges:
             if 'kbit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
                 infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'].replace(' kbit/s',''))
+            elif 'Mbit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
+                infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'].replace(' Mbit/s',''))
             else:
                 infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'])
             # print(e, infrastructure_graph.edges[e])

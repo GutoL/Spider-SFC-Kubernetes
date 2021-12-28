@@ -3,11 +3,7 @@ import numpy as np
 from PIL import Image
 from imageai.Detection import ObjectDetection
 import os
-
-app = Flask(__name__)
- 
-UPLOAD_FOLDER = 'uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+from vnf_interface import VNF
 
 # https://towardsdatascience.com/object-detection-with-10-lines-of-code-d6cb4d86f606
 def object_detection(image):
@@ -24,30 +20,33 @@ def object_detection(image):
                                                 output_image_path=os.path.join(app.config['UPLOAD_FOLDER'] , 
                                                 "imagenew.jpg"))
 
+    result = {}
     for eachObject in detections:
-        print(eachObject["name"] , " : " , eachObject["percentage_probability"] )
- 
-@app.route('/')
-def main():
-    return 'Homepage'
- 
+        # print(eachObject["name"] , " : " , eachObject["percentage_probability"])
+        result[eachObject["name"]] = eachObject["percentage_probability"]
+    
+    return result
 
-# curl -F "file=@image.png" http://127.0.0.1:5000/compress
-@app.route('/compress', methods=['GET', 'POST'])
-def compress():
-    if request.method == 'POST':
-        
-        file = request.files['file']
-        
+class ObjectDetector(VNF):
+    def _process_data(self, request):
+        UPLOAD_FOLDER = 'uploads'
+
+        file = Image.open(request.files['file'])
+
         extension = os.path.splitext(file.filename)[1]
-        f_name = os.path.join(app.config['UPLOAD_FOLDER'], 'image'+ extension)
+        f_name = os.path.join(UPLOAD_FOLDER, 'image'+ extension)
         file.save(f_name)      
 
-        object_detection(f_name)
+        result = object_detection(f_name)
 
-        response = jsonify('ok')
-        return response
+        # response = jsonify('ok')
+        return result
 
 
 if __name__ == '__main__':
-    app.run(debug=True,port=4500)
+    app = Flask(__name__)
+    
+    my_vnf = ObjectDetector(vnf_config_file='config_vnf.json')
+    my_vnf.register(app)
+    app.run(host="0.0.0.0", port=5000, debug=True)
+
