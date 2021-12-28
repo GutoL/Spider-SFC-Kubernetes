@@ -29,7 +29,7 @@ class VNF(FlaskView, metaclass=abc.ABCMeta):
 
         except:
             if self.vnf_config['last_vnf']:
-                response = 'OK last vnf'
+                response = 'OK last vnf:'+json.dumps(processed_data)
             else:
                 response = 'Error!'
 

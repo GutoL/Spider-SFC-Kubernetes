@@ -31,7 +31,7 @@ class ImageCompressor(VNF):
 
         dumped = json.dumps(img, cls=NumpyEncoder)
 
-        fact_resp = {'data': dumped} 
+        fact_resp = {'data': dumped, 'shape': img.shape}
         
         return fact_resp
 
