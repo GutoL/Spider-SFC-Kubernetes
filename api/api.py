@@ -16,8 +16,9 @@ from vnf_template_repository import VnfTemplateRepository
 
 class API(FlaskView):
     def __init__(self) -> None:
-        self.spider_orchestrator_url = 'http://192.168.0.209:4996/sfc_request'
-        self.spider_monitor_ip = "http://192.168.0.209:4997/data"
+        f = open('system.config')
+        self.config = json.load(f)
+        f.close()
 
         self.vnf_template_repository = VnfTemplateRepository()
         self.sfc_request_repository = SfcRequestRepository()
@@ -44,7 +45,7 @@ class API(FlaskView):
 
     @route('/infra_monitor', methods=['GET'])
     def get_infrastructure_from_monitor(self) -> dict:
-        infrastructure = self.infrastructure_repository.get_data_from_monitor(self.spider_monitor_ip)
+        infrastructure = self.infrastructure_repository.get_data_from_monitor(self.config['monitor_ip']+'data')
         return json.dumps(infrastructure, indent=4, default=json_util.default)
 
     @route('/infra/<infra_name>', methods=['GET'])
@@ -67,17 +68,16 @@ class API(FlaskView):
 
         try:
             # print(placement_req)
-            requests.post(self.spider_orchestrator_url, placement_req, headers=headers)
-            return 'True'
+            # requests.post(self.config['orchestrator_ip']+'sfc_request', placement_req, headers=headers)
+            response = requests.post(self.config['monitor_ip']+'sfc_request', placement_req, headers=headers)
+            return response.text
         except:
             print('Error in create the SFC placement')
             return 'False'
 
-        
-
-app = Flask(__name__)
-CORS(app)
-API.register(app)
 
 if __name__ == '__main__':
+    app = Flask(__name__)
+    CORS(app)
+    API.register(app)
     app.run(host="0.0.0.0", port=3500, debug=True)

@@ -5,6 +5,8 @@ import tarfile
 import json
 import requests
 from utils import Utils
+from flask_cors import CORS
+
 
 class EnvironmentController(FlaskView):
     route_base = '/'
@@ -85,11 +87,11 @@ class EnvironmentController(FlaskView):
 
         return "ok\n"
 
-app = Flask(__name__)
-EnvironmentController.register(app)
-
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app = Flask(__name__)
+    CORS(app)
+    EnvironmentController.register(app)
+    app.run(host="0.0.0.0", port=4900, debug=True)
     # ec = EnvironmentController()
     # ec._create_docker_image(image_name = 'sfc1_teste', files_path = '/home/guto/Desktop/vnf1/')
     

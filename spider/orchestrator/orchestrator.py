@@ -28,7 +28,7 @@ class Orchestrator(FlaskView):
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
         # 1 - get status of infrastructure from monitor.py
-        response = requests.get(self.config['monitor_ip']+'/data')
+        response = requests.get(self.config['monitor_ip']+'data')
         graph_json = response.json()
 
         data = {

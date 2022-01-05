@@ -2,21 +2,28 @@ import random
 from flask_classful import FlaskView, route, request
 from flask import Flask
 import networkx as nx
+import requests
 from infra_graph import InfrastructureGraph
 from graph_handler import InfrastructureGraphHandler
 import copy
 import numpy as np
+import json
+from flask_cors import CORS
+
 
 class Agent(FlaskView):
     def __init__(self) -> None:
         super().__init__()
+        f = open('system.config')
+        self.config = json.load(f)
+        f.close()
 
     route_base = '/'
 
-    @route('/placement', methods=['POST'])
-    def place_vnf(self)-> dict:
-        placement_req = request.json
-        
+    # @route('/placement', methods=['POST'])
+    # def place_vnf(self)-> dict:
+    #    placement_req = request.json
+    def place_vnf(self, placement_req)-> dict:    
         infrastructure_graph = InfrastructureGraph(placement_req['graph']['nodes'], placement_req['graph']['edges'])
 
         # print('################')
@@ -25,10 +32,15 @@ class Agent(FlaskView):
         # print('----------')
 
         for e in infrastructure_graph.edges:
-            if 'kbit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
+            if 'bit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
+                infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'].replace(' bit/s',''))
+
+            elif 'kbit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
                 infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'].replace(' kbit/s',''))
+            
             elif 'Mbit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
                 infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'].replace(' Mbit/s',''))
+            
             else:
                 infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'])
             # print(e, infrastructure_graph.edges[e])
@@ -111,14 +123,20 @@ class Agent(FlaskView):
         redundancy = random.randint(0,1)
 
         return candidate, redundancy
-        
 
-    
-        
-app = Flask(__name__)
-Agent.register(app)
+    @route('/sfc_request', methods=['POST'])
+    def create_sfc(self)-> str:
+        placement_decision = self.place_vnf(request.json)
+
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        response = requests.post(self.config['environment_controller_ip']+'sfc_request',json=placement_decision, headers=headers)
+        return response.text
+
 
 if __name__ == '__main__':
+    app = Flask(__name__)
+    CORS(app)
+    Agent.register(app)
     app.run(host="0.0.0.0", port=4998, debug=True)
 
 
