@@ -32,15 +32,16 @@ class Agent(FlaskView):
         # print('----------')
 
         for e in infrastructure_graph.edges:
-            if 'bit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
-                infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'].replace(' bit/s',''))
 
-            elif 'kbit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
+            if 'kbit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
                 infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'].replace(' kbit/s',''))
             
             elif 'Mbit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
                 infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'].replace(' Mbit/s',''))
             
+            if 'bit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
+                infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'].replace(' bit/s',''))
+                
             else:
                 infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'])
             # print(e, infrastructure_graph.edges[e])
