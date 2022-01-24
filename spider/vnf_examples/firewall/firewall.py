@@ -14,6 +14,7 @@ class Firewall(VNF):
         
         f = open('firewallrules.json')
         config = json.load(f)
+	f.close()
 
         if ip_client in config['ListOfBannedIpAddr']:
             return None
