@@ -9,9 +9,9 @@ main node
 
 *** Install the docker and kuberbetes in the master, minion-1, and minion-2 nodes. Remember of disable the swap, run the API proxy of master (run: kubectl proxy --port=8080 &), and enable the docker api.
 
-*** You need to give access to the VNFs access the k8s API. There is a file in the environment-controller folder named pod_authorization.yaml. Then, in the master node, run: kubectl create -f pod_authorization.yaml and then restart the kubelet service: systemctl restart kubelet.service.
+*** You need to give access to the VNFs access the k8s API. There is a file in the folder utils named pod_authorization.yaml. Then, in the master node, run: kubectl create -f pod_authorization.yaml and then restart the kubelet service: systemctl restart kubelet.service.
 
-*** Remember that you need to add labels to the nodes where the VNFs will be placed. These labels are used by the k8s to define in which node each VNF will be placed. To define the label of minion-1, for instance, use: kubectl label nodes minion-1 nodetype=minion-1
+*** Remember that you need to add labels to the nodes where the VNFs will be placed. These labels are used by the k8s to define in which node each VNF will be placed. To define the label of minion-1, for instance, use (in master node): kubectl label nodes minion-1 nodetype=minion-1
 
 *** In the minion nodes, you need to copy the folder monitor/daemon. Then run the setup.sh script in order to install all dependencies. Then, update the file node_config.json in order to specify all node information (for instance the informations about id and links).
 
