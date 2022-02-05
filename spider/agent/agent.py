@@ -20,6 +20,12 @@ class Agent(FlaskView):
 
     route_base = '/'
 
+    def _get_node_id_from_name(self, name, graph):
+        for node in graph.nodes:
+            if name == graph.nodes[node]['name']:
+                return graph.nodes[node]['id']
+        return name
+
     # @route('/placement', methods=['POST'])
     # def place_vnf(self)-> dict:
     #    placement_req = request.json
@@ -31,24 +37,9 @@ class Agent(FlaskView):
         #     print(n,infrastructure_graph.nodes[n])
         # print('----------')
 
-        for e in infrastructure_graph.edges:
-
-            if 'kbit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
-                infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'].replace(' kbit/s',''))
-            
-            elif 'Mbit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
-                infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'].replace(' Mbit/s',''))
-            
-            if 'bit/s' in infrastructure_graph.edges[e]['available_resources']['bandwidth']:
-                infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'].replace(' bit/s',''))
-                
-            else:
-                infrastructure_graph.edges[e]['available_resources']['bandwidth'] = float(infrastructure_graph.edges[e]['available_resources']['bandwidth'])
-            # print(e, infrastructure_graph.edges[e])
-        
         igh = InfrastructureGraphHandler(infrastructure_graph)
 
-        k = 2
+        k = 3
 
         placement_decision = {
             "name":   placement_req['sfc_info']['name'],
@@ -96,6 +87,9 @@ class Agent(FlaskView):
                  "resources":vnf['resources']
                 }
             )
+
+            # print('temp_source_node',temp_source_node)
+            temp_source_node = self._get_node_id_from_name(temp_source_node, igh.graph)
 
             shortest_path = nx.shortest_path(igh.graph,source=str(temp_source_node), target=str(candidate_node))
 

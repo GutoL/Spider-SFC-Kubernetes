@@ -53,6 +53,9 @@ class InfrastructureGraph(nx.MultiGraph):
     self.add_edges_from(all_edges)
 
     for n in self.nodes:
+      if 'name' not in self.nodes[n]:
+        self.nodes[n]['name'] = n
+
       if 'capabilities' not in self.nodes[n]:
         self.nodes[n]['capabilities'] = {'supported_VNFs':[]}
         self.nodes[n]['available_resources'] = {'cpu':0,'memory':0,'storage':0}

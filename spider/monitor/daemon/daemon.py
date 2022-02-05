@@ -16,14 +16,49 @@ class MonitorDaemon(FlaskView):
 
     route_base = '/'
 
-    def link_consumption(self, interface)-> str:
+    def _convert_to_mb(self,value):
+        value = value.lower()
+
+        if 'kbit/s' in value:
+            value = float(value.replace('kbit/s',''))
+            value = value/1000 # converting to MB
+            
+        elif 'mbit/s' in value:
+            value = float(value.replace('mbit/s',''))
+        
+        elif 'mb/s' in value:
+            value = float(value.replace('mb/s',''))
+                       
+        elif 'gbit/s' in value:
+            value = float(value.replace('gbit/s',''))
+            value = value*1000 # converting to MB
+
+        elif 'bit/s' in value:
+            value = float(value.replace('bit/s',''))
+            value = value/1000000 # converting to MB
+        
+        return value
+            
+
+    def _link_consumption(self, interface)-> str:
+
+        # getting the total capacity of interface
+        command = "ethtool "+str(interface)+" | grep Speed:"
+
+        total_link_capacity = subprocess.check_output(command, shell=True)
+        total_link_capacity = total_link_capacity.decode('utf8')
+
+        start = 'Speed: '
+        total_link_capacity = total_link_capacity[total_link_capacity.find(start)+len(start):len(total_link_capacity)-1]
+        total_link_capacity = self._convert_to_mb(total_link_capacity)
                 
         # getting usage data for current monthly period and converting it to a string
         command = "vnstat -i "+str(interface)+" --oneline | cut -d ';' -f 7"
 
         output = subprocess.check_output(command, shell=True)
         output = output.decode('utf8').replace('\n','')
-        return str(output)
+
+        return (total_link_capacity - self._convert_to_mb(output))
         
     
     def _get_cpu_consumption(self):
@@ -69,7 +104,7 @@ class MonitorDaemon(FlaskView):
         all_links = []
 
         for link in links_config:
-            bandwidth = self.link_consumption(link['interface'])
+            bandwidth = self._link_consumption(link['interface'])
             
             host_name = socket.gethostname()
             host_ip = 'http://'+socket.gethostbyname(host_name + '.local')
@@ -87,9 +122,8 @@ if __name__ == '__main__':
     app = Flask(__name__)
     MonitorDaemon.register(app)
 
-    if len(sys.argv) > 1:
-        port = int(sys.argv[1])
-    else:
-        port = 4000
+    f = open('daemon_config.json')
+    daemon_config = json.load(f)
+    f.close()
         
-    app.run(host='0.0.0.0', port=port)
+    app.run(host=daemon_config['ip'], port=daemon_config['port'])

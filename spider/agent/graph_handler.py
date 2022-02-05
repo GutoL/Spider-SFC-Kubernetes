@@ -145,6 +145,11 @@ class InfrastructureGraphHandler():
     if edges_attr != None:  
       nx.set_edge_attributes(self.graph, edges_attr)
   
+  def get_node_id_from_name(self, name):
+    for node in self.graph.nodes:
+      if name == self.graph.nodes[node]['name']:
+        return self.graph.nodes[node]['id']
+
   def get_candidate_nodes(self, vnf_id, source, destination, vnf_requirements,
                           flow_entry_requirements, k, link_weight='delay', consider_src_dst=True):
 
@@ -155,9 +160,9 @@ class InfrastructureGraphHandler():
     nx.set_node_attributes(temp_graph, nodes_attrs)
 
 
-    for node in temp_graph.nodes:
-      print(temp_graph.nodes[node])
-    print('---------------')
+    # for node in temp_graph.nodes:
+    #   print(temp_graph.nodes[node])
+    # print('---------------')
     
     # nx.draw(temp_graph,with_labels=True)
     # plt.show()
@@ -167,6 +172,9 @@ class InfrastructureGraphHandler():
     
     scores = {}
     
+    source = self.get_node_id_from_name(source)
+    destination = self.get_node_id_from_name(destination)
+
     # for node in self.graph.nodes:
     for node in temp_graph.nodes:
 
@@ -195,7 +203,8 @@ class InfrastructureGraphHandler():
         
       if meet_requeriment == False:
         continue
-
+      
+      # print(paths_lenghts)
       scores[node] = paths_lenghts[node][source] + paths_lenghts[node][destination]
     
     scores = sorted(scores.items(), key=lambda item: item[1])

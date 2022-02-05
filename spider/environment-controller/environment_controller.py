@@ -44,7 +44,16 @@ class EnvironmentController(FlaskView):
             r = requests.get(self.config['k8s_url']+'/api/v1/nodes/'+node_name)
 
             url_node = r.json()
-            url = 'http://'+url_node['metadata']['annotations']['flannel.alpha.coreos.com/public-ip']+':5555/build?t='+image_name
+
+            ip_info = url_node['status']['addresses']
+
+            for ip in ip_info:
+                if 'ip' in ip['type'].lower():
+                    url = ip['address']
+                    break
+
+            url += ':5555/build?t='+image_name
+            # url = 'http://'+url_node['metadata']['annotations']['flannel.alpha.coreos.com/public-ip']+':5555/build?t='+image_name
 
             command = 'curl -v -X POST -H "Content-Type:application/tar" --data-binary'+" '@"+self.config['dockerfile_name']+"' "+url
             
@@ -82,7 +91,7 @@ class EnvironmentController(FlaskView):
             # print('vnf:', final_vnf_name, 'last vnf:', last_vnf)
 
             self._create_docker_image(final_vnf_name, next_vnf, last_vnf, 
-                                    self.config['vnfs_path']+vnf['name'],node_name)
+                                    self.config['vnfs_path']+vnf['name']+'/',node_name)
             self._create_k8s_deployment(final_vnf_name, vnf['node_name'], vnf['replicas'], vnf['resources'])
 
         return "ok\n"

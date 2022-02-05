@@ -17,12 +17,15 @@ class Monitor(FlaskView):
         response = {"nodes":[],"edges":[]}
         
         for machine in self.config['machines']:
-            r = requests.get(machine['ip']+':'+str(machine['port']))
-            r = r.json()
-            response['nodes'].append(r['node'])
+            try:
+                r = requests.get(machine['ip']+':'+str(machine['port']))
+                r = r.json()
+                response['nodes'].append(r['node'])
 
-            for l in r['links']:
-                response['edges'].append(l)
+                for l in r['links']:
+                    response['edges'].append(l)
+            except Exception as e:
+                print(e)
         
         return response
 

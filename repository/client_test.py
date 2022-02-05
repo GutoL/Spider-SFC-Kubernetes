@@ -15,30 +15,30 @@ vnfs = [
       "name": "firewall",
       "_id": "0",
       "id": "0",
-      "resources": {"cpu": 1,"memory": 1,"storage": 1},
-      "mttf": 1,
-      "mttr": 1,
-      "availability": 1,
+      "resources": {"cpu": 0.1,"memory": 1,"storage": 1},
+      "mttf": 2880,
+      "mttr": 0.17,
+      "availability": 0.999940976,
       "path_to_files": basic_path+"firewall"
     },
     {
       "name": "compress-image",
       "_id": "1",
       "id": "1",
-      "resources": {"cpu": 1,"memory": 1,"storage": 1},
-      "mttf": 1,
-      "mttr": 1,
-      "availability": 1,
+      "resources": {"cpu": 0.1,"memory": 1,"storage": 1},
+      "mttf": 2880,
+      "mttr": 0.17,
+      "availability": 0.999940976,
       "path_to_files": basic_path+"compress-image"
     },
     {
       "name": "face-detection",
       "_id": "2",
       "id": "2",
-      "resources": {"cpu": 1,"memory": 1,"storage": 1},
-      "mttf": 1,
-      "mttr": 1,
-      "availability": 1,
+      "resources": {"cpu": 0.1,"memory": 1,"storage": 1},
+      "mttf": 2880,
+      "mttr": 0.17,
+      "availability": 0.999940976,
       "path_to_files": basic_path+"face-detection"
     }
   ]
