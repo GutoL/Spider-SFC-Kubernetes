@@ -1,0 +1,66 @@
+{
+    "id": 0,
+    "name": "My SFC",
+    "VNFs": [
+        {
+            "_id": "1",
+            "name": "compress-image",
+            "id": "1",
+            "resources": {
+                "cpu": 0.1,
+                "memory": 1,
+                "storage": 1
+            },
+            "mttf": 2880,
+            "mttr": 0.17,
+            "availability": 0.999940976,
+            "path_to_files": "/home/guto/vnf_catalog/compress-image"
+        },
+        {
+            "_id": "0",
+            "name": "firewall",
+            "id": "0",
+            "resources": {
+                "cpu": 0.1,
+                "memory": 1,
+                "storage": 1
+            },
+            "mttf": 2880,
+            "mttr": 0.17,
+            "availability": 0.999940976,
+            "path_to_files": "/home/guto/vnf_catalog/firewall"
+        }
+    ],
+    "destination": "ned-stark",
+    "source": "tyrion-lannister",
+    "flow_entries": [
+        {
+            "source": "Source",
+            "destination": "compress-image",
+            "resources": {
+                "bandwidth": 1,
+                "cost": 1
+            }
+        },
+        {
+            "source": "compress-image",
+            "destination": "firewall",
+            "resources": {
+                "bandwidth": 1,
+                "cost": 1
+            }
+        },
+        {
+            "source": "firewall",
+            "destination": "destination",
+            "resources": {
+                "bandwidth": 1,
+                "cost": 1
+            }
+        }
+    ],
+    "requirements": {
+        "availability": 0.99
+    }
+}
+

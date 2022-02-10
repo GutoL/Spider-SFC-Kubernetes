@@ -25,7 +25,7 @@ class VNF(FlaskView, metaclass=abc.ABCMeta):
 
         try:
             response = self._forward_data(processed_data)
-            response += '\nOK'
+            response += 'OK'
 
         except:
             if self.vnf_config['last_vnf']:

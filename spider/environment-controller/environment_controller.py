@@ -7,6 +7,8 @@ import requests
 from utils import Utils
 from flask_cors import CORS
 
+from kubernetes import client, config
+from kubernetes.client.rest import ApiException
 
 class EnvironmentController(FlaskView):
     route_base = '/'
@@ -94,7 +96,65 @@ class EnvironmentController(FlaskView):
                                     self.config['vnfs_path']+vnf['name']+'/',node_name)
             self._create_k8s_deployment(final_vnf_name, vnf['node_name'], vnf['replicas'], vnf['resources'])
 
-        return "ok\n"
+        return "ok"
+    
+
+    def _get_services_deployments_names(self, sfc_name):
+        services_list = []
+        deployments_list = []
+        
+        namespace = 'default'
+
+        # config.load_incluster_config() # running inside pod
+        config.load_kube_config() # running outside pod        
+
+        v1 = client.CoreV1Api()
+        services = v1.list_namespaced_service(watch=False,namespace=namespace)
+        
+        for service in services.items:
+            if sfc_name in str(service.metadata.name):
+                services_list.append(service.metadata.name)
+
+        v1 = client.AppsV1Api()
+        deployments = v1.list_namespaced_deployment(watch=False,namespace=namespace)
+
+        for deployment in deployments.items:
+            if sfc_name in str(deployment.metadata.name):
+                deployments_list.append(deployment.metadata.name)
+        
+        return services_list, deployments_list
+
+    @route("/sfc_request/<id>", methods=["DELETE"])
+    def delete_sfc(self, id):
+        services_list, deployments_list = self._get_services_deployments_names(id)
+
+        config.load_kube_config() # or config.load_incluster_config()
+
+        api_instance = client.CoreV1Api()
+
+        namespace = 'default'
+
+        # https://stackoverflow.com/questions/64221992/simple-way-to-delete-existing-pods-from-python
+        for service_name in services_list:
+            try:
+                api_response = api_instance.delete_namespaced_service(service_name, namespace)
+                # print(api_response)
+            except ApiException as e:
+                print("Exception when calling CoreV1Api->delete_namespaced_pod: %s\n" % e)
+        
+        api_instance = client.AppsV1Api()
+
+        for deployment_name in deployments_list:
+            try:
+                api_response = api_instance.delete_namespaced_deployment(deployment_name, namespace)
+                # print(api_response)
+            except ApiException as e:
+                print("Exception when calling CoreV1Api->delete_namespaced_pod: %s\n" % e)
+
+        return 'ok'
+
+
+
 
 if __name__ == '__main__':
     app = Flask(__name__)
