@@ -37,6 +37,10 @@ class Agent(FlaskView):
         #     print(n,infrastructure_graph.nodes[n])
         # print('----------')
 
+        # for e in infrastructure_graph.edges:
+        #     print(e, infrastructure_graph.edges[e])
+        # print('-------------')
+
         igh = InfrastructureGraphHandler(infrastructure_graph)
 
         k = 3
@@ -91,7 +95,8 @@ class Agent(FlaskView):
             # print('temp_source_node',temp_source_node)
             temp_source_node = self._get_node_id_from_name(temp_source_node, igh.graph)
 
-            shortest_path = nx.shortest_path(igh.graph,source=str(temp_source_node), target=str(candidate_node))
+            weight = 'delay'
+            shortest_path = nx.shortest_path(igh.graph,source=str(temp_source_node), target=str(candidate_node), weight=weight)
 
             shortest_path_links = []
             

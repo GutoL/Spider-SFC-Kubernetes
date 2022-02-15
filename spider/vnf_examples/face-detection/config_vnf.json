@@ -1,4 +1,5 @@
 {
+    "vnf_name": "my-sfc-face-detection-service",
     "next_vnf": "my-sfc-destination",
     "last_vnf": true,
     "port": 5000

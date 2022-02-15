@@ -64,16 +64,25 @@ class API(FlaskView):
         # placement_req = request.json
         placement_req = json.dumps(request.json, indent=4, default=json_util.default)
 
+        # print(placement_req)
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
         try:
             # print(placement_req)
             # requests.post(self.config['orchestrator_ip']+'sfc_request', placement_req, headers=headers)
             response = requests.post(self.config['monitor_ip']+'sfc_request', placement_req, headers=headers)
-            return response.text
+            return str(response.status_code)
         except:
             print('Error in create the SFC placement')
-            return 'False'
+            return 'False' # '''
+    
+    @route("/sfc_request/<id>", methods=["DELETE"])
+    def delete_sfc_request(self, id):
+        headers = {'content-type': 'application/json'}
+        response = requests.delete(self.config['environment_controller_ip']+'sfc_request/'+id,headers=headers)
+        
+        return str(response.status_code)
+        
 
 
 if __name__ == '__main__':

@@ -3,6 +3,8 @@ import requests
 import json
 import abc
 
+from datetime import datetime
+
 from flask import Flask
 from flask_classful import FlaskView, route, request
 
@@ -13,23 +15,32 @@ class VNF(FlaskView, metaclass=abc.ABCMeta):
 
     def __init__(self, vnf_config_file='config_vnf.json'):
         fp = open(vnf_config_file)
-        vnf_config = json.load(fp)
-        self.vnf_config = vnf_config
+        self.vnf_config = json.load(fp)
     
     @route('/', methods=['POST', 'GET'])
     def index(self) -> str:
-        processed_data = self._process_data(request)
         
+        first_time =  datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+
+        processed_data = self._process_data(request)
+
+        second_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+
         if processed_data == None:
             return 'Error! Flow blocked...'
 
         try:
             response = self._forward_data(processed_data)
-            response += 'OK'
+            # response += 'OK'
+            response += ' '+self.vnf_config['vnf_name']+'='+first_time+'->'
+            response += ' '+self.vnf_config['vnf_name']+'='+second_time+'->'
 
         except:
             if self.vnf_config['last_vnf']:
-                response = 'OK last vnf:'+json.dumps(processed_data)
+                #response = 'OK last vnf: '+json.dumps(processed_data)
+                response = ' '+self.vnf_config['vnf_name']+'='+first_time+'->'
+                response += ' '+self.vnf_config['vnf_name']+'='+second_time+'->'
+
             else:
                 response = 'Error!'
 
@@ -57,7 +68,7 @@ class VNF(FlaskView, metaclass=abc.ABCMeta):
         port = self.vnf_config['port']
 
         url = 'http://'+str(next_vnf)+':'+str(port)+'/'
-        
+
         headers = {'Content-type': 'application/json'}
 
         r = requests.post(url=url, json=data, headers=headers)

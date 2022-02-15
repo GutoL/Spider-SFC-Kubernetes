@@ -36,7 +36,8 @@ class EnvironmentController(FlaskView):
 
     def _create_docker_image(self, image_name, next_vnf, last_vnf, vnf_files_path, node_name):
 
-        vnf_json_config = {"next_vnf": next_vnf, "last_vnf": last_vnf, "port":self.config['vnf_port']}
+        vnf_json_config = {"vnf_name":image_name, "next_vnf": next_vnf, "last_vnf": last_vnf, 
+                            "port":self.config['vnf_port']}
 
         with open(vnf_files_path+'/config_vnf.json', 'w', encoding='utf-8') as f:
             json.dump(vnf_json_config, f, ensure_ascii=False, indent=4)

@@ -44,9 +44,10 @@
             "interface":"enp0s8",
             "type": "peer", 
             "customer": "Guto",
-            "src_port": "1-p1", 
-            "resources": {"delay": 0.5564765526145907, "bandwidth": 10, "cost_link": 10}, 
-            "available_resources": {"delay": 0.5564765526145907, "bandwidth": 10, "cost_link": 10}
+            "src_port": "1-p1",
+            "delay": 100,
+            "resources": {"bandwidth": 10, "cost_link": 10}, 
+            "available_resources": {"bandwidth": 10, "cost_link": 10}
         }
     ]
 }

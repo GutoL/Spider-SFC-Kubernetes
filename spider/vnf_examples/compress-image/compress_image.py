@@ -4,6 +4,8 @@ import numpy as np
 import cv2
 from PIL import Image
 
+from datetime import datetime
+
 from vnf_interface import VNF
 
 class NumpyEncoder(json.JSONEncoder):

@@ -7,7 +7,7 @@ import time
 api_url = 'http://192.168.0.209:3500/sfc_request'
 sfc_name = 'my-sfc'
 
-number_of_vnfs = 1
+number_of_vnfs = 3
 
 f = open('sfc_requests_examples/sfc_request_example_'+str(number_of_vnfs)+'_vnfs.json')
 request_data = json.load(f)
@@ -22,6 +22,7 @@ result = ''
 for x in range(number_of_experiments):
     print('Starting:',x)
 
+    # creating the SFC
     start = time.time()
     r = requests.post(api_url, data=json.dumps(request_data), headers=headers)
     end = time.time()
@@ -35,7 +36,7 @@ for x in range(number_of_experiments):
 print('Mean placement time (seconds):',np.mean(times_list))
 print('Standard deviation placement time:', np.std(times_list))
 
-f = open("results/results_"+str(number_of_vnfs)+"_vnfs.txt", "w")
+f = open("results/placement_results_"+str(number_of_vnfs)+"_vnfs.txt", "w")
 f.write(result)
 f.write('Mean placement time (seconds): '+str(np.mean(times_list))+'\n')
 f.write('Standard deviation placement time: '+str(np.std(times_list)))

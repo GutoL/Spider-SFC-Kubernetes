@@ -12,8 +12,10 @@ def get_vnf_service_ip(service_name):
         if service_name == str(svc.metadata.name):
             return svc.spec.cluster_ip
 
+image_name = 'spider-face.jpg'
+
 files = {
-    'file': ('image.jpg', open('image.jpg', 'rb')),
+    'file': ('image.jpg', open(image_name, 'rb')),
 }
 
 first_vnf_service_name = 'my-sfc-compress-image-service'

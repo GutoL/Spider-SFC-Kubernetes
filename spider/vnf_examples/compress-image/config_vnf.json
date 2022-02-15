@@ -1,4 +1,5 @@
 {
+    "vnf_name": "my-sfc-compress-image-service",
     "next_vnf": "my-sfc-firewall-service",
     "last_vnf": false,
     "port": 5000

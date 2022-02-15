@@ -1,4 +1,5 @@
 { 
+    "vnf_name":"sfc1-vnf1",
     "next_vnf": "sfc1-vnf2",
     "last_vnf":false,
     "port": 5000
