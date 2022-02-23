@@ -1,0 +1,33 @@
+Source: https://www.altoros.com/blog/kubernetes-networking-writing-your-own-simple-cni-plug-in-with-bash/
+
+After add the node in the cluster, run the following command to discover the subnets of each node (e.g. for a node named master):
+
+Install the dependencies running the file install_requirements.sh on all nodes in the cluster.
+
+$ kubectl describe node k8s-master | grep PodCIDR
+output: PodCIDR:                     10.244.0.0/24
+
+In each node in the cluster, create the file: /etc/cni/net.d/10-bash-cni-plugin.conf, and add the following content:
+
+{
+	"cniVersion": "0.3.1",
+        "name": "mynet",
+        "type": "bash-cni",
+        "network": "10.244.0.0/16",
+        "subnet": "<node-cidr-range>"
+}
+
+Copy the file bash-cni to the folder /opt/cni/bin/ in each machine of the cluster. We also need to make it executable by running: chmod +x bash-cni.
+
+All the configuration can be done copying the file start.sh in each machine and running it. There are some comments in the file with instructions to configure each node, but in summary:
+
+The next thing to do is prepare a network bridge on both master and worker nodes. The network bridge is a special device that aggregates network packets from multiple network interfaces. Later, whenever requested, our CNI plug-in will add network interfaces from all containers to the bridge.
+
+After we need to apply additional forwarding rules that will allow to freely forward traffic inside the whole pod CIDR range in order to enable communication between containers located at the same host.
+
+After we should set up a network address translation (NAT) on the host VM. NAT is a mechanism that replaces a source IP address in the outcoming package with the IP address of the host VM. The original source address is stored somewhere else in the TCP packet. When the response arrives to the host VM, the original address is restored, and a package is forwarded to the container network interface.
+
+Finally, we need to create the routes between the nodes using the ip route command in order to make possible the communication between pods hosted on different nodes.
+
+Everytime we reboot the machine, we need to run the file start.sh again because some configuration is missed.
+
