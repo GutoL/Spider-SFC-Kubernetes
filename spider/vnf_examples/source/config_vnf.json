@@ -1,0 +1,6 @@
+{
+    "vnf_name": "my-sfc-firewall-service",
+    "next_vnf": "my-sfc-face-detection-service",
+    "last_vnf": false,
+    "port": 5000
+}

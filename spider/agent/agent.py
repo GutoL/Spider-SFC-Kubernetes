@@ -20,6 +20,12 @@ class Agent(FlaskView):
 
     route_base = '/'
 
+    def _get_node_name_from_id(self, id, graph):
+        for node in graph.nodes:
+            if id == graph.nodes[node]['id']:
+                return graph.nodes[node]['name']
+        return id
+
     def _get_node_id_from_name(self, name, graph):
         for node in graph.nodes:
             if name == graph.nodes[node]['name']:
@@ -55,6 +61,8 @@ class Agent(FlaskView):
 
         temp_source_node = placement_req['sfc_info']['source']
 
+        weight = 'delay'
+
         for i, vnf in enumerate(placement_req['vnfs']):
             candidate_nodes = igh.get_candidate_nodes(vnf['id'],
                                                     placement_req['sfc_info']['source'],
@@ -86,6 +94,7 @@ class Agent(FlaskView):
 
             placement_decision['VNFs'].append(
                 {"name":vnf['name'],
+                 "node_id": candidate_node,
                  "node_name":igh.graph.nodes[str(candidate_node)]['name'],
                  "replicas":redundancy+1,
                  "resources":vnf['resources']
@@ -95,16 +104,13 @@ class Agent(FlaskView):
             # print('temp_source_node',temp_source_node)
             temp_source_node = self._get_node_id_from_name(temp_source_node, igh.graph)
 
-            weight = 'delay'
             shortest_path = nx.shortest_path(igh.graph,source=str(temp_source_node), target=str(candidate_node), weight=weight)
 
-            shortest_path_links = []
+            shortest_path_links = [(shortest_path[j], shortest_path[j+1]) for j in range(len(shortest_path)-1)]
             
-            for j in range(len(shortest_path)-1):
-                shortest_path_links.append((shortest_path[j], shortest_path[j+1]))
-
             placement_decision['flow_entries'].append(
-                {
+                {   
+                    "vnf_name": vnf['name'],
                     "source": temp_source_node,
                     "destination": candidate_node,
                     "path": shortest_path_links
@@ -113,6 +119,25 @@ class Agent(FlaskView):
 
             temp_source_node = candidate_node
 
+
+        # temp_source_node = self._get_node_id_from_name(temp_source_node, igh.graph)
+        destination_node = self._get_node_id_from_name(placement_req['sfc_info']['destination'], igh.graph)
+
+        shortest_path = nx.shortest_path(igh.graph,source=str(temp_source_node), target=str(destination_node), weight=weight)
+
+        shortest_path_links = [(shortest_path[x], shortest_path[x+1]) for x in range(len(shortest_path)-1)]
+
+        placement_decision['flow_entries'].append(
+            {   
+                "vnf_name": 'destination',
+                "source": temp_source_node,
+                "destination": destination_node,
+                "path": shortest_path_links
+            }
+        )
+
+        placement_decision['graph'] = placement_req['graph']
+        
         return placement_decision
     
     def _define_placement(self, obs):

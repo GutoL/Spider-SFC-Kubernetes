@@ -6,6 +6,7 @@ import json
 import requests
 from utils import Utils
 from flask_cors import CORS
+from copy import deepcopy
 
 from kubernetes import client, config
 from kubernetes.client.rest import ApiException
@@ -75,29 +76,123 @@ class EnvironmentController(FlaskView):
         json_content = Utils.create_service_json_format(vnf_name+'-service', vnf_name)
         r = requests.post(url=self.config['k8s_url_services'], data=json_content, headers=headers)
 
+    def _get_node_name_by_id(self, infra_info, node_id):
+        node_name = False
+
+        for node in infra_info['nodes']:
+            if node['id'] == node_id:
+                node_name = node['name']
+                break
+
+        return node_name
+
     @route('/sfc_request', methods=['POST'])
     def sfc(self)-> str:
         
         sfc_json = request.json
+
+        vnfs_to_place_temp = [
+
+            {
+                'name':'source',
+                'final_vnf_name':sfc_json['name']+'-source',
+                'node_name': sfc_json['source'],
+                'replicas': 1,
+                'resources': {'cpu':1, 'memory':1, 'storage':1},
+                'last_vnf': False
+            }            
+        ]
+
         
+        update_next_vnf_source = True
+        infra_info = sfc_json['graph']
+
         for i, vnf in enumerate(sfc_json['VNFs']):
-            final_vnf_name = sfc_json['name']+'-'+vnf['name']
-            node_name = vnf['node_name']
+            vnf_to_place = {}
+            
+            vnf_to_place['name'] = vnf['name']
+            vnf_to_place['final_vnf_name'] = sfc_json['name']+'-'+vnf['name']
+
+            if update_next_vnf_source:
+                vnfs_to_place_temp[0]['next_vnf'] = vnf_to_place['final_vnf_name']+'-service'
+                update_next_vnf_source = False
+
+            vnf_to_place['node_name'] = self._get_node_name_by_id(infra_info, vnf['node_id']) #vnf['node_name']
+            vnf_to_place['replicas'] = vnf['replicas']
+            vnf_to_place['resources'] = vnf['resources']
             
             if i == len(sfc_json['VNFs'])-1:
-                last_vnf = True
-                next_vnf = sfc_json['name']+'-destination'
+                last_vnf = False # True
+                next_vnf = sfc_json['name']+'-destination-service'
             else:
                 last_vnf = False
-                next_vnf = sfc_json['name']+'-'+sfc_json['VNFs'][i+1]['name']+'-service'       
+                next_vnf = sfc_json['name']+'-'+sfc_json['VNFs'][i+1]['name']+'-service'
 
             # print('vnf:', final_vnf_name, 'last vnf:', last_vnf)
 
-            self._create_docker_image(final_vnf_name, next_vnf, last_vnf, 
-                                    self.config['vnfs_path']+vnf['name']+'/',node_name)
-            self._create_k8s_deployment(final_vnf_name, vnf['node_name'], vnf['replicas'], vnf['resources'])
+            vnf_to_place['last_vnf'] = last_vnf
+            vnf_to_place['next_vnf'] = next_vnf
 
-        return "ok"
+            vnfs_to_place_temp.append(vnf_to_place)
+
+        vnfs_to_place = []
+        
+        for i, flow_entry in enumerate(sfc_json['flow_entries']):
+            
+            if i < len(vnfs_to_place_temp):
+                vnfs_to_place.append(vnfs_to_place_temp[i])
+                update_next_vnf = True
+            
+            if len(flow_entry['path']) > 1:
+                vnf_to_place = {}
+
+                for path in range(len(flow_entry['path'])-1):
+                    node_to_place_proxy = self._get_node_name_by_id(infra_info, flow_entry['path'][path][1])
+                    
+                    if node_to_place_proxy:
+                        vnf_to_place['name'] = 'spider-proxy'
+                        vnf_to_place['final_vnf_name'] = sfc_json['name']+'-'+flow_entry['vnf_name']+'-'+vnf_to_place['name']+'-'+str(path)
+                        
+                        if update_next_vnf:
+                            vnfs_to_place[i]['next_vnf'] = vnf_to_place['final_vnf_name']+'-service'
+                            update_next_vnf = False
+
+                        vnf_to_place['node_name'] = node_to_place_proxy
+                        vnf_to_place['replicas'] = 1
+                        vnf_to_place['resources'] = {'cpu':1, 'memory':1, 'storage':1}
+
+                        vnf_to_place['last_vnf'] = False
+                        
+                        if path == len(flow_entry['path'])-2:
+                            vnf_to_place['next_vnf'] = sfc_json['name']+'-'+sfc_json['flow_entries'][i]['vnf_name']+'-service'
+                        else:    
+                            vnf_to_place['next_vnf'] = sfc_json['name']+'-'+flow_entry['vnf_name']+'-'+vnf_to_place['name']+'-'+str(path+1)+'-service'
+                        
+                        vnfs_to_place.append(deepcopy(vnf_to_place))
+                        
+                    else:
+                        return 'Error!!!'
+        
+        vnfs_to_place.append(
+            {
+                'name':'destination',
+                'final_vnf_name':sfc_json['name']+'-destination',
+                'node_name': sfc_json['destination'],
+                'replicas': 1,
+                'resources': {'cpu':1, 'memory':1, 'storage':1},
+                'next_vnf': '',
+                'last_vnf': True
+            }
+        )
+
+        for vnf in vnfs_to_place:
+            # print(vnf,'\n---------------------')
+            self._create_docker_image(vnf['final_vnf_name'], vnf['next_vnf'], vnf['last_vnf'],
+                                    self.config['vnfs_path']+vnf['name']+'/', vnf['node_name'])
+
+            self._create_k8s_deployment(vnf['final_vnf_name'], vnf['node_name'], vnf['replicas'], vnf['resources'])
+
+        return "ok\n"
     
 
     def _get_services_deployments_names(self, sfc_name):

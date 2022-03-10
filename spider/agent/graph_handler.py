@@ -161,7 +161,7 @@ class InfrastructureGraphHandler():
 
 
     # for node in temp_graph.nodes:
-    #   print(temp_graph.nodes[node])
+    #   print(node, temp_graph.nodes[node])
     # print('---------------')
     
     # nx.draw(temp_graph,with_labels=True)

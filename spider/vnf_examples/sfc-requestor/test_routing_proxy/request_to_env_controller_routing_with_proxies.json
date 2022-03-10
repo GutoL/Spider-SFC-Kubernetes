@@ -1,0 +1,1200 @@
+{
+    "name": "my-sfc",
+    "source": "tyrion-lannister",
+    "destination": "ned-stark",
+    "VNFs": [
+        {
+            "name": "compress-image",
+            "node_id": "5",
+            "node_name": "cersei-lannister",
+            "replicas": 1,
+            "resources": {
+                "cpu": 0.1,
+                "memory": 1,
+                "storage": 1
+            }
+        },
+        {
+            "name": "firewall",
+            "node_id": "1",
+            "node_name": "daenerys-targaryen",
+            "replicas": 2,
+            "resources": {
+                "cpu": 0.1,
+                "memory": 1,
+                "storage": 1
+            }
+        },
+        {
+            "name": "face-detection",
+            "node_id": "4",
+            "node_name": "tyrion-lannister",
+            "replicas": 1,
+            "resources": {
+                "cpu": 0.1,
+                "memory": 1,
+                "storage": 1
+            }
+        }
+    ],
+    "flow_entries": [
+        {
+            "vnf_name": "compress-image",
+            "source": "4",
+            "destination": "5",
+            "path": []
+        },
+        {
+            "vnf_name": "firewall",
+            "source": "5",
+            "destination": "1",
+            "path": []
+        },
+        {
+            "vnf_name": "face-detection",
+            "source": "1",
+            "destination": "4",
+            "path": []
+        },
+        {
+            "vnf_name": "destination",
+            "source": "4",
+            "destination": "2",
+            "path": [
+                [
+                    "4",
+                    "0"
+                ],
+                ["0", "2"]
+            ]
+        }
+    ],
+    "graph": {
+        "nodes": [
+            {
+                "availability": 0.9994794377928162,
+                "available_resources": {
+                    "cpu": 0.995,
+                    "memory": 1.4296340942382812,
+                    "storage": 7.8960113525390625
+                },
+                "capabilities": {
+                    "supported_VNFs": [
+                        "all",
+                        {
+                            "id": 0,
+                            "type": "firewall"
+                        },
+                        {
+                            "id": 1,
+                            "type": "compress-image"
+                        },
+                        {
+                            "id": 2,
+                            "type": "face-detection"
+                        }
+                    ]
+                },
+                "energy": 20,
+                "id": "0",
+                "latitude": -8.055496562177133,
+                "longitude": -34.87085906552739,
+                "metadata": [],
+                "mttf": 2880,
+                "mttr": 1.5,
+                "name": "aerys-targaryen",
+                "node_cost": 500,
+                "original_id": "0",
+                "peers": 4,
+                "placed": {},
+                "ports": [
+                    "enp0s8"
+                ],
+                "resources": {
+                    "cpu": 1,
+                    "memory": 1.9368858337402344,
+                    "storage": 19.561111450195312
+                },
+                "status": "operational",
+                "type": "M"
+            },
+            {
+                "availability": 0.9994794377928162,
+                "available_resources": {
+                    "cpu": 0.995,
+                    "memory": 1.4373588562011719,
+                    "storage": 8.285133361816406
+                },
+                "capabilities": {
+                    "supported_VNFs": [
+                        "all",
+                        {
+                            "id": 0,
+                            "type": "firewall"
+                        },
+                        {
+                            "id": 1,
+                            "type": "compress-image"
+                        },
+                        {
+                            "id": 2,
+                            "type": "face-detection"
+                        }
+                    ]
+                },
+                "energy": 20,
+                "id": "1",
+                "latitude": -23.55539174966705,
+                "longitude": -46.74719535600647,
+                "metadata": [],
+                "mttf": 2880,
+                "mttr": 1.5,
+                "name": "daenerys-targaryen",
+                "node_cost": 500,
+                "original_id": "1",
+                "peers": 4,
+                "placed": {},
+                "ports": [
+                    "enp0s8"
+                ],
+                "resources": {
+                    "cpu": 1,
+                    "memory": 1.9368858337402344,
+                    "storage": 19.561111450195312
+                },
+                "status": "operational",
+                "type": "M"
+            },
+            {
+                "availability": 0.9994794377928162,
+                "available_resources": {
+                    "cpu": 0.966,
+                    "memory": 0.8552894592285156,
+                    "storage": 4.1198577880859375
+                },
+                "capabilities": {
+                    "supported_VNFs": [
+                        "all",
+                        {
+                            "id": 0,
+                            "type": "firewall"
+                        },
+                        {
+                            "id": 1,
+                            "type": "compress-image"
+                        },
+                        {
+                            "id": 2,
+                            "type": "face-detection"
+                        }
+                    ]
+                },
+                "energy": 20,
+                "id": "2",
+                "latitude": 34.04671420814904,
+                "longitude": -118.23728836773381,
+                "metadata": [],
+                "mttf": 2880,
+                "mttr": 1.5,
+                "name": "ned-stark",
+                "node_cost": 500,
+                "original_id": "2",
+                "peers": 4,
+                "placed": {},
+                "ports": [
+                    "enp0s8"
+                ],
+                "resources": {
+                    "cpu": 1,
+                    "memory": 1.9368858337402344,
+                    "storage": 19.561111450195312
+                },
+                "status": "operational",
+                "type": "M"
+            },
+            {
+                "availability": 0.9994794377928162,
+                "available_resources": {
+                    "cpu": 1.792,
+                    "memory": 0.7944145202636719,
+                    "storage": 8.458938598632812
+                },
+                "capabilities": {
+                    "supported_VNFs": [
+                        "all",
+                        {
+                            "id": 0,
+                            "type": "firewall"
+                        },
+                        {
+                            "id": 1,
+                            "type": "compress-image"
+                        },
+                        {
+                            "id": 2,
+                            "type": "face-detection"
+                        }
+                    ]
+                },
+                "energy": 20,
+                "id": "3",
+                "latitude": 40.57855591317288,
+                "longitude": -74.02676857900808,
+                "metadata": [],
+                "mttf": 2880,
+                "mttr": 1.5,
+                "name": "sansa-stark",
+                "node_cost": 500,
+                "original_id": "3",
+                "peers": 4,
+                "placed": {},
+                "ports": [
+                    "enp0s8"
+                ],
+                "resources": {
+                    "cpu": 2,
+                    "memory": 1.9366531372070312,
+                    "storage": 19.561111450195312
+                },
+                "status": "operational",
+                "type": "M"
+            },
+            {
+                "availability": 0.9994794377928162,
+                "available_resources": {
+                    "cpu": 0.983,
+                    "memory": 1.3147735595703125,
+                    "storage": 9.644840240478516
+                },
+                "capabilities": {
+                    "supported_VNFs": [
+                        "all",
+                        {
+                            "id": 0,
+                            "type": "firewall"
+                        },
+                        {
+                            "id": 1,
+                            "type": "compress-image"
+                        },
+                        {
+                            "id": 2,
+                            "type": "face-detection"
+                        }
+                    ]
+                },
+                "energy": 20,
+                "id": "4",
+                "latitude": 51.571999643748704,
+                "longitude": -0.1004840216043367,
+                "metadata": [],
+                "mttf": 2880,
+                "mttr": 1.5,
+                "name": "tyrion-lannister",
+                "node_cost": 500,
+                "original_id": "4",
+                "peers": 4,
+                "placed": {},
+                "ports": [
+                    "enp0s8"
+                ],
+                "resources": {
+                    "cpu": 1,
+                    "memory": 1.9368858337402344,
+                    "storage": 19.561111450195312
+                },
+                "status": "operational",
+                "type": "M"
+            },
+            {
+                "availability": 0.9994794377928162,
+                "available_resources": {
+                    "cpu": 0.996,
+                    "memory": 1.4737739562988281,
+                    "storage": 8.779682159423828
+                },
+                "capabilities": {
+                    "supported_VNFs": [
+                        "all",
+                        {
+                            "id": 0,
+                            "type": "firewall"
+                        },
+                        {
+                            "id": 1,
+                            "type": "compress-image"
+                        },
+                        {
+                            "id": 2,
+                            "type": "face-detection"
+                        }
+                    ]
+                },
+                "energy": 20,
+                "id": "5",
+                "latitude": 53.31020288277148,
+                "longitude": -6.258124842535792,
+                "metadata": [],
+                "mttf": 2880,
+                "mttr": 1.5,
+                "name": "cersei-lannister",
+                "node_cost": 500,
+                "original_id": "5",
+                "peers": 4,
+                "placed": {},
+                "ports": [
+                    "enp0s8"
+                ],
+                "resources": {
+                    "cpu": 1,
+                    "memory": 1.9368858337402344,
+                    "storage": 19.561111450195312
+                },
+                "status": "operational",
+                "type": "M"
+            }
+        ],
+        "edges": [
+            {
+                "available_resources": {
+                    "bandwidth": 999.96644,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "1",
+                    "ip": "http://192.168.0.112",
+                    "latitude": -23.55539174966705,
+                    "longitude": -46.74719535600647,
+                    "name": "daenerys-targaryen",
+                    "port": "p0"
+                },
+                "id": 0,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "0",
+                    "ip": "http://192.168.0.138",
+                    "port": "p1"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.96644,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "2",
+                    "ip": "http://192.168.0.172",
+                    "latitude": 34.04671420814904,
+                    "longitude": -118.23728836773381,
+                    "name": "ned-stark",
+                    "port": "p0"
+                },
+                "id": 1,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "0",
+                    "ip": "http://192.168.0.138",
+                    "port": "p2"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.96644,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "3",
+                    "ip": "http://192.168.0.99",
+                    "latitude": 40.57855591317288,
+                    "longitude": -74.02676857900808,
+                    "name": "sansa-stark",
+                    "port": "p0"
+                },
+                "id": 2,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "0",
+                    "ip": "http://192.168.0.138",
+                    "port": "p3"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.96644,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "4",
+                    "ip": "http://192.168.0.91",
+                    "latitude": 51.571999643748704,
+                    "longitude": -0.1004840216043367,
+                    "name": "tyrion-lannister",
+                    "port": "p0"
+                },
+                "id": 3,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "0",
+                    "ip": "http://192.168.0.138",
+                    "port": "p4"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.96644,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "5",
+                    "ip": "http://192.168.0.177",
+                    "latitude": 53.31020288277148,
+                    "longitude": -6.258124842535792,
+                    "name": "cersei-lannister",
+                    "port": "p0"
+                },
+                "id": 4,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "0",
+                    "ip": "http://192.168.0.138",
+                    "port": "p5"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.98548,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "0",
+                    "ip": "http://192.168.0.138",
+                    "latitude": -8.055496562177133,
+                    "longitude": -34.87085906552739,
+                    "name": "aerys-targaryen",
+                    "port": "p0"
+                },
+                "id": 0,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "1",
+                    "ip": "http://192.168.0.112",
+                    "port": "p0"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.98548,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "2",
+                    "ip": "http://192.168.0.172",
+                    "latitude": 34.04671420814904,
+                    "longitude": -118.23728836773381,
+                    "name": "ned-stark",
+                    "port": "p0"
+                },
+                "id": 1,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "1",
+                    "ip": "http://192.168.0.112",
+                    "port": "p2"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.98548,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "3",
+                    "ip": "http://192.168.0.99",
+                    "latitude": 40.57855591317288,
+                    "longitude": -74.02676857900808,
+                    "name": "sansa-stark",
+                    "port": "p0"
+                },
+                "id": 2,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "1",
+                    "ip": "http://192.168.0.112",
+                    "port": "p3"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.98548,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "4",
+                    "ip": "http://192.168.0.91",
+                    "latitude": 51.571999643748704,
+                    "longitude": -0.1004840216043367,
+                    "name": "tyrion-lannister",
+                    "port": "p0"
+                },
+                "id": 3,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "1",
+                    "ip": "http://192.168.0.112",
+                    "port": "p4"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.98548,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "5",
+                    "ip": "http://192.168.0.177",
+                    "latitude": 53.31020288277148,
+                    "longitude": -6.258124842535792,
+                    "name": "cersei-lannister",
+                    "port": "p0"
+                },
+                "id": 4,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "1",
+                    "ip": "http://192.168.0.112",
+                    "port": "p5"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.55256,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "0",
+                    "ip": "http://192.168.0.138",
+                    "latitude": -8.055496562177133,
+                    "longitude": -34.87085906552739,
+                    "name": "aerys-targaryen",
+                    "port": "p0"
+                },
+                "id": 0,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "2",
+                    "ip": "http://192.168.0.172",
+                    "port": "p0"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.55256,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "1",
+                    "ip": "http://192.168.0.112",
+                    "latitude": -23.55539174966705,
+                    "longitude": -46.74719535600647,
+                    "name": "daenerys-targaryen",
+                    "port": "p0"
+                },
+                "id": 1,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "2",
+                    "ip": "http://192.168.0.172",
+                    "port": "p1"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.55256,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "3",
+                    "ip": "http://192.168.0.99",
+                    "latitude": 40.57855591317288,
+                    "longitude": -74.02676857900808,
+                    "name": "sansa-stark",
+                    "port": "p0"
+                },
+                "id": 2,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "2",
+                    "ip": "http://192.168.0.172",
+                    "port": "p3"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.55256,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "4",
+                    "ip": "http://192.168.0.91",
+                    "latitude": 51.571999643748704,
+                    "longitude": -0.1004840216043367,
+                    "name": "tyrion-lannister",
+                    "port": "p0"
+                },
+                "id": 3,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "2",
+                    "ip": "http://192.168.0.172",
+                    "port": "p4"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.55256,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "5",
+                    "ip": "http://192.168.0.177",
+                    "latitude": 53.31020288277148,
+                    "longitude": -6.258124842535792,
+                    "name": "cersei-lannister",
+                    "port": "p0"
+                },
+                "id": 4,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "2",
+                    "ip": "http://192.168.0.172",
+                    "port": "p5"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.9466,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "0",
+                    "ip": "http://192.168.0.138",
+                    "latitude": -8.055496562177133,
+                    "longitude": -34.87085906552739,
+                    "name": "aerys-targaryen",
+                    "port": "p0"
+                },
+                "id": 0,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "3",
+                    "ip": "http://192.168.0.99",
+                    "port": "p0"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.9466,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "1",
+                    "ip": "http://192.168.0.112",
+                    "latitude": -23.55539174966705,
+                    "longitude": -46.74719535600647,
+                    "name": "daenerys-targaryen",
+                    "port": "p0"
+                },
+                "id": 1,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "3",
+                    "ip": "http://192.168.0.99",
+                    "port": "p1"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.9466,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "2",
+                    "ip": "http://192.168.0.172",
+                    "latitude": 34.04671420814904,
+                    "longitude": -118.23728836773381,
+                    "name": "ned-stark",
+                    "port": "p0"
+                },
+                "id": 2,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "3",
+                    "ip": "http://192.168.0.99",
+                    "port": "p2"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.9466,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "4",
+                    "ip": "http://192.168.0.91",
+                    "latitude": 51.571999643748704,
+                    "longitude": -0.1004840216043367,
+                    "name": "tyrion-lannister",
+                    "port": "p0"
+                },
+                "id": 3,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "3",
+                    "ip": "http://192.168.0.99",
+                    "port": "p4"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.9466,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "5",
+                    "ip": "http://192.168.0.177",
+                    "latitude": 53.31020288277148,
+                    "longitude": -6.258124842535792,
+                    "name": "cersei-lannister",
+                    "port": "p0"
+                },
+                "id": 4,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "3",
+                    "ip": "http://192.168.0.99",
+                    "port": "p5"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.96737,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "0",
+                    "ip": "http://192.168.0.138",
+                    "latitude": -8.055496562177133,
+                    "longitude": -34.87085906552739,
+                    "name": "aerys-targaryen",
+                    "port": "p0"
+                },
+                "id": 0,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "4",
+                    "ip": "http://192.168.0.91",
+                    "port": "p0"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.96737,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "1",
+                    "ip": "http://192.168.0.112",
+                    "latitude": -23.55539174966705,
+                    "longitude": -46.74719535600647,
+                    "name": "daenerys-targaryen",
+                    "port": "p0"
+                },
+                "id": 1,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "4",
+                    "ip": "http://192.168.0.91",
+                    "port": "p1"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.96737,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "2",
+                    "ip": "http://192.168.0.172",
+                    "latitude": 34.04671420814904,
+                    "longitude": -118.23728836773381,
+                    "name": "ned-stark",
+                    "port": "p0"
+                },
+                "id": 2,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "4",
+                    "ip": "http://192.168.0.91",
+                    "port": "p2"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.96737,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "3",
+                    "ip": "http://192.168.0.99",
+                    "latitude": 40.57855591317288,
+                    "longitude": -74.02676857900808,
+                    "name": "sansa-stark",
+                    "port": "p0"
+                },
+                "id": 3,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "4",
+                    "ip": "http://192.168.0.91",
+                    "port": "p3"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.96737,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "5",
+                    "ip": "http://192.168.0.177",
+                    "latitude": 53.31020288277148,
+                    "longitude": -6.258124842535792,
+                    "name": "cersei-lannister",
+                    "port": "p0"
+                },
+                "id": 4,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "4",
+                    "ip": "http://192.168.0.91",
+                    "port": "p5"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.96803,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "0",
+                    "ip": "http://192.168.0.138",
+                    "latitude": -8.055496562177133,
+                    "longitude": -34.87085906552739,
+                    "name": "aerys-targaryen",
+                    "port": "p0"
+                },
+                "id": 0,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "5",
+                    "ip": "http://192.168.0.177",
+                    "port": "p0"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.96803,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "1",
+                    "ip": "http://192.168.0.112",
+                    "latitude": -23.55539174966705,
+                    "longitude": -46.74719535600647,
+                    "name": "daenerys-targaryen",
+                    "port": "p0"
+                },
+                "id": 1,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "5",
+                    "ip": "http://192.168.0.177",
+                    "port": "p1"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.96803,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "2",
+                    "ip": "http://192.168.0.172",
+                    "latitude": 34.04671420814904,
+                    "longitude": -118.23728836773381,
+                    "name": "ned-stark",
+                    "port": "p0"
+                },
+                "id": 2,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "5",
+                    "ip": "http://192.168.0.177",
+                    "port": "p2"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.96803,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "3",
+                    "ip": "http://192.168.0.99",
+                    "latitude": 40.57855591317288,
+                    "longitude": -74.02676857900808,
+                    "name": "sansa-stark",
+                    "port": "p0"
+                },
+                "id": 3,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "5",
+                    "ip": "http://192.168.0.177",
+                    "port": "p3"
+                },
+                "type": "peer"
+            },
+            {
+                "available_resources": {
+                    "bandwidth": 999.96803,
+                    "cost_link": 10
+                },
+                "customer": "Guto",
+                "delay": 100,
+                "destination": {
+                    "id": "4",
+                    "ip": "http://192.168.0.91",
+                    "latitude": 51.571999643748704,
+                    "longitude": -0.1004840216043367,
+                    "name": "tyrion-lannister",
+                    "port": "p0"
+                },
+                "id": 4,
+                "interface": "enp0s3",
+                "resources": {
+                    "bandwidth": 10,
+                    "cost_link": 10
+                },
+                "source": {
+                    "id": "5",
+                    "ip": "http://192.168.0.177",
+                    "port": "p4"
+                },
+                "type": "peer"
+            }
+        ]
+    }
+}

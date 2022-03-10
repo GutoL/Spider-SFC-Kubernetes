@@ -1,0 +1,7 @@
+Use the following command to run the test:
+
+curl -X POST -H "Content-Type: application/json" -d @test.json http://<environment-controller-ip>/sfc_request
+
+you need to define the environment controller IP. It you create an SFC as following:
+
+soure (4-tyrion) -> compress image (5-cersei) -> firewall (1-daenerys) -> face detection (4-tyrion) -> proxy-0 (0-aerys) -> destination (2-ned)

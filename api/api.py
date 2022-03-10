@@ -64,7 +64,6 @@ class API(FlaskView):
         # placement_req = request.json
         placement_req = json.dumps(request.json, indent=4, default=json_util.default)
 
-        # print(placement_req)
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
         try:

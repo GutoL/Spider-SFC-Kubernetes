@@ -18,7 +18,7 @@ files = {
     'file': ('image.jpg', open(image_name, 'rb')),
 }
 
-first_vnf_service_name = 'my-sfc-compress-image-service'
+first_vnf_service_name = 'my-sfc-source-service'
 vnf_port = 5000
 
 url = get_vnf_service_ip(first_vnf_service_name)
