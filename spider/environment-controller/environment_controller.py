@@ -91,17 +91,20 @@ class EnvironmentController(FlaskView):
         
         sfc_json = request.json
 
-        vnfs_to_place_temp = [
+        if self.config['create_source_destinaion_apps']:
+            vnfs_to_place_temp = [
 
-            {
-                'name':'source',
-                'final_vnf_name':sfc_json['name']+'-source',
-                'node_name': sfc_json['source'],
-                'replicas': 1,
-                'resources': {'cpu':1, 'memory':1, 'storage':1},
-                'last_vnf': False
-            }            
-        ]
+                {
+                    'name':'source',
+                    'final_vnf_name':sfc_json['name']+'-source',
+                    'node_name': sfc_json['source'],
+                    'replicas': 1,
+                    'resources': {'cpu':1, 'memory':1, 'storage':1},
+                    'last_vnf': False
+                }            
+            ]
+        else:
+            vnfs_to_place_temp = []
 
         
         update_next_vnf_source = True
@@ -113,7 +116,7 @@ class EnvironmentController(FlaskView):
             vnf_to_place['name'] = vnf['name']
             vnf_to_place['final_vnf_name'] = sfc_json['name']+'-'+vnf['name']
 
-            if update_next_vnf_source:
+            if update_next_vnf_source and self.config['create_source_destinaion_apps']:
                 vnfs_to_place_temp[0]['next_vnf'] = vnf_to_place['final_vnf_name']+'-service'
                 update_next_vnf_source = False
 
@@ -122,7 +125,11 @@ class EnvironmentController(FlaskView):
             vnf_to_place['resources'] = vnf['resources']
             
             if i == len(sfc_json['VNFs'])-1:
-                last_vnf = False # True
+                if self.config['create_source_destinaion_apps']:
+                    last_vnf = False
+                else:
+                    last_vnf = True
+
                 next_vnf = sfc_json['name']+'-destination-service'
             else:
                 last_vnf = False
@@ -173,17 +180,18 @@ class EnvironmentController(FlaskView):
                     else:
                         return 'Error!!!'
         
-        vnfs_to_place.append(
-            {
-                'name':'destination',
-                'final_vnf_name':sfc_json['name']+'-destination',
-                'node_name': sfc_json['destination'],
-                'replicas': 1,
-                'resources': {'cpu':1, 'memory':1, 'storage':1},
-                'next_vnf': '',
-                'last_vnf': True
-            }
-        )
+        if self.config['create_source_destinaion_apps']:
+            vnfs_to_place.append(
+                {
+                    'name':'destination',
+                    'final_vnf_name':sfc_json['name']+'-destination',
+                    'node_name': sfc_json['destination'],
+                    'replicas': 1,
+                    'resources': {'cpu':1, 'memory':1, 'storage':1},
+                    'next_vnf': '',
+                    'last_vnf': True
+                }
+            )
 
         for vnf in vnfs_to_place:
             # print(vnf,'\n---------------------')

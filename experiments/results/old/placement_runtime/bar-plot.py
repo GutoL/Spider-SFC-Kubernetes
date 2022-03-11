@@ -11,7 +11,7 @@ avarage_list = []
 std_list = []
 
 for x in scenarios:
-    f = open("placement_results_"+str(x)+"_vnfs.txt", "r")
+    f = open("results/results_"+str(x)+"_vnfs.txt", "r")
     lines = f.readlines()[-2:] # getting only mean and standard deviation from result files
     lines = [float(line[line.find(start)+len(start):line.rfind(end)]) for line in lines]
     
@@ -33,5 +33,5 @@ ax.yaxis.grid(True)
 
 # Save the figure and show
 plt.tight_layout()
-plt.savefig('runtime-results.png')
+plt.savefig('results/runtime-results.png')
 # plt.show()
