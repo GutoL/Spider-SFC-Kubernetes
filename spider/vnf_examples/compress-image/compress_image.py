@@ -21,12 +21,24 @@ class NumpyEncoder(json.JSONEncoder):
 
 
 class ImageCompressor(VNF):
-    def _process_data(self, request):
+    # def _process_data(self, request): # Using source
         
-        img = np.asarray(re.findall(r'\d+', request.json['data']), dtype=np.uint8) # converting the array in string format to array of numbers
+    #     img = np.asarray(re.findall(r'\d+', request.json['data']), dtype=np.uint8) # converting the array in string format to array of numbers
+    #     img = np.reshape(img, request.json['shape']) # reshaping the image
 
-        img = np.reshape(img, request.json['shape']) # reshaping the image
+    #     img = cv2.resize(img,(224,224))
+    #     img = cv2.cvtColor(np.array(img), cv2.COLOR_BGR2RGB)
 
+    #     dumped = json.dumps(img, cls=NumpyEncoder)
+
+    #     fact_resp = {'data': dumped, 'shape': img.shape}
+        
+    #     return fact_resp
+
+    def _process_data(self, request): # Not using source
+        
+        img = Image.open(request.files['file'])
+        img = np.array(img)
         img = cv2.resize(img,(224,224))
         img = cv2.cvtColor(np.array(img), cv2.COLOR_BGR2RGB)
 
