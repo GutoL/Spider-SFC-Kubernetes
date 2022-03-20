@@ -11,11 +11,11 @@ avarage_list = []
 std_list = []
 
 for x in scenarios:
-    f = open("placement_results_"+str(x)+"_vnfs.txt", "r")
+    f = open("without_src_dst/placement_results_"+str(x)+"_vnfs.txt", "r")
     lines = f.readlines()[-2:] # getting only mean and standard deviation from result files
     lines = [float(line[line.find(start)+len(start):line.rfind(end)]) for line in lines]
     
-    print(lines)
+    print('scenario',x,lines)
     print('-------------')
     avarage_list.append(lines[0])
     std_list.append(lines[1])
