@@ -2,6 +2,7 @@ import sys
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+plt.style.use('ggplot')
 
 from calc_e2e_delay import get_times_per_vnf
 
@@ -41,15 +42,22 @@ def generate_box_plot(processing_time_per_vnf):
     print(vnf_name+':\n',df[df['VNF Name'] == vnf_name].describe())
     df['VNF Name'].replace(vnf_name, vnf_name_replace[vnf_name], inplace=True)
 
-    sns.boxplot(x=df[columns_name[0]],y=df[columns_name[1]], palette="Blues", width=0.5)
+    sns.boxplot(x=df[columns_name[0]],y=df[columns_name[1]], palette="Reds", width=0.5)
     plt.show()   
 
-def generate_results(number_of_experiments, number_of_info_per_experiment, lines):
+def generate_results(number_of_experiments, number_of_info_per_experiment, lines, with_src_dst):
+
     processing_time_per_vnf = {}
 
     for x in range(number_of_experiments):
         i = x*number_of_info_per_experiment
-        _, vnf3, vnf2, vnf1 = lines[i:i+number_of_info_per_experiment]
+
+        if with_src_dst:
+            _, destination, vnf3, vnf2, vnf1, source = lines[i:i+number_of_info_per_experiment]
+            
+        else:
+            _, vnf3, vnf2, vnf1 = lines[i:i+number_of_info_per_experiment]
+            
 
         vnf1_name, vnf1_t1, vnf1_t2 = get_times_per_vnf(vnf1)
         vnf2_name, vnf2_t1, vnf2_t2 = get_times_per_vnf(vnf2)
@@ -84,10 +92,10 @@ if __name__ == "__main__":
     if with_src_dst == True:
         number_of_info_per_experiment = 6
         number_of_vnfs = 5 # source, compress image, firewall, face detection, destination
-        generate_results(number_of_experiments, number_of_info_per_experiment, lines)
+        generate_results(number_of_experiments, number_of_info_per_experiment, lines, with_src_dst)
 
     elif with_src_dst == False:
         number_of_info_per_experiment = 4
         number_of_vnfs = 3 # compress image, firewall, face detection
-        generate_results(number_of_experiments, number_of_info_per_experiment, lines)
+        generate_results(number_of_experiments, number_of_info_per_experiment, lines, with_src_dst)
     
