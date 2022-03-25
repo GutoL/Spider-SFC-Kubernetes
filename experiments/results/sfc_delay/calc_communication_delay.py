@@ -62,9 +62,8 @@ def generate_results_with_src_dst(number_of_vnfs, number_of_experiments, number_
         # print(vnf3_name, '->',destination_name,':',destination_t1-vnf3_t2)
         # print('-------')
 
-    data = pd.DataFrame(sfc_overall_delay_list)
-    print(data.describe())
-    
+    return pd.DataFrame(sfc_overall_delay_list)
+        
     
     # for x in delay_between_vnfs:
     #     print(np.mean(delay_between_vnfs[x]))
@@ -98,8 +97,7 @@ def generate_results_without_src_dst(number_of_vnfs, number_of_experiments, numb
 
         sfc_overall_delay_list.append(sfc_overall_delay)
     
-    data = pd.DataFrame(sfc_overall_delay_list)
-    print(data.describe())
+    return pd.DataFrame(sfc_overall_delay_list)
 
 if __name__ == "__main__":
 
@@ -124,10 +122,12 @@ if __name__ == "__main__":
     if with_src_dst == True:
         number_of_info_per_experiment = 6
         number_of_vnfs = 5 # source, compress image, firewall, face detection, destination
-        generate_results_with_src_dst(number_of_vnfs, number_of_experiments, number_of_info_per_experiment, lines)
-    
+        data = generate_results_with_src_dst(number_of_vnfs, number_of_experiments, number_of_info_per_experiment, lines)
+       
     elif with_src_dst == False:
         number_of_info_per_experiment = 4
         number_of_vnfs = 3 # compress image, firewall, face detection
-        generate_results_without_src_dst(number_of_vnfs, number_of_experiments, number_of_info_per_experiment, lines)
+        data = generate_results_without_src_dst(number_of_vnfs, number_of_experiments, number_of_info_per_experiment, lines)
+    
+    print(data.describe())
     

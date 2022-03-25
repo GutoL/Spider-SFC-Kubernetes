@@ -4,7 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 
-from calc_e2e_delay import get_times_per_vnf
+from calc_communication_delay import get_times_per_vnf
 
 def get_processing_time(vnf_name, vnf_t1, vnf_t2, dictionary):
     
@@ -15,14 +15,17 @@ def get_processing_time(vnf_name, vnf_t1, vnf_t2, dictionary):
 
     return dictionary
 
-def generate_box_plot(processing_time_per_vnf):
-
-    columns_name = ['VNF Name','Runtime (in seconds)']
+def generate_dataframe(dictionary, columns_name):
+    
     df = pd.DataFrame(columns=columns_name)
     
-    for vnf in processing_time_per_vnf:
-        temp_df = pd.DataFrame([(vnf,runtime) for runtime in processing_time_per_vnf[vnf]], columns=columns_name)
+    for vnf in dictionary:
+        temp_df = pd.DataFrame([(vnf,runtime) for runtime in dictionary[vnf]], columns=columns_name)
         df = pd.concat([df, temp_df])
+    
+    return df
+
+def generate_box_plot(df, x_name, y_name):
 
     vnf_name_replace = {
         'my-sfc-compress-image':'Compress Image',
@@ -42,10 +45,10 @@ def generate_box_plot(processing_time_per_vnf):
     print(vnf_name+':\n',df[df['VNF Name'] == vnf_name].describe())
     df['VNF Name'].replace(vnf_name, vnf_name_replace[vnf_name], inplace=True)
 
-    sns.boxplot(x=df[columns_name[0]],y=df[columns_name[1]], palette="Reds", width=0.5)
+    sns.boxplot(x=df[x_name],y=df[y_name], palette="Reds", width=0.5)
     plt.show()   
 
-def generate_results(number_of_experiments, number_of_info_per_experiment, lines, with_src_dst):
+def generate_results(number_of_experiments, number_of_info_per_experiment, lines, with_src_dst, plot=True):
 
     processing_time_per_vnf = {}
 
@@ -67,7 +70,14 @@ def generate_results(number_of_experiments, number_of_info_per_experiment, lines
         processing_time_per_vnf = get_processing_time(vnf2_name, vnf2_t1, vnf2_t2, processing_time_per_vnf)
         processing_time_per_vnf = get_processing_time(vnf3_name, vnf3_t1, vnf3_t2, processing_time_per_vnf)
     
-    generate_box_plot(processing_time_per_vnf)
+    columns_name = ['VNF Name','Runtime (in seconds)']
+
+    df = generate_dataframe(processing_time_per_vnf, columns_name)
+
+    if plot:
+        generate_box_plot(df, columns_name[0], columns_name[1])
+
+    return df
 
 if __name__ == "__main__":
 
@@ -92,10 +102,11 @@ if __name__ == "__main__":
     if with_src_dst == True:
         number_of_info_per_experiment = 6
         number_of_vnfs = 5 # source, compress image, firewall, face detection, destination
-        generate_results(number_of_experiments, number_of_info_per_experiment, lines, with_src_dst)
-
+    
     elif with_src_dst == False:
         number_of_info_per_experiment = 4
         number_of_vnfs = 3 # compress image, firewall, face detection
-        generate_results(number_of_experiments, number_of_info_per_experiment, lines, with_src_dst)
+
+    generate_results(number_of_experiments, number_of_info_per_experiment, lines, with_src_dst)
+        
     
