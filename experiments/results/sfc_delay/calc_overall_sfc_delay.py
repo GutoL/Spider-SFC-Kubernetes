@@ -39,13 +39,27 @@ if __name__ == "__main__":
         f.close()
         processing_data = generate_results(number_of_experiments, number_of_info_per_experiment, lines, with_src_dst, plot=False)
 
-        overall_delay = communication_data[0].mean()
-        print('communication delay:',overall_delay)
+        communication_delay = communication_data[0].mean()
+        print('communication delay:',communication_delay)
 
         vnfs_names = list(processing_data['VNF Name'].value_counts().keys())
-
+        total_vnf_processing_delay = 0
+        
+        # calculating overall delay
         for vnf in vnfs_names:
             vnf_delay = processing_data[processing_data['VNF Name']==vnf]['Runtime (in seconds)'].mean()
             print(vnf,'delay:', vnf_delay)
-            overall_delay += vnf_delay
-        print(overall_delay) # falta calcular o impacto de cada delay (communication e processing) no delay total
+            total_vnf_processing_delay += vnf_delay
+        
+        print('VNF processing delay:',total_vnf_processing_delay)
+
+        overall_delay = communication_delay + total_vnf_processing_delay
+        print('-----------------------\nOverall SFC delay:',overall_delay)
+
+        print('Communication delay impact:',(communication_delay*100)/overall_delay)
+        print('VNF processing delay impact:',(total_vnf_processing_delay*100)/overall_delay)
+        
+        
+
+
+
