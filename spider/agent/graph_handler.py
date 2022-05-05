@@ -204,7 +204,8 @@ class InfrastructureGraphHandler():
       if meet_requeriment == False:
         continue
       
-      # print(paths_lenghts)
+      print(paths_lenghts)
+      print(source, destination, node)
       scores[node] = paths_lenghts[node][source] + paths_lenghts[node][destination]
     
     scores = sorted(scores.items(), key=lambda item: item[1])

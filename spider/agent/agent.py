@@ -49,7 +49,7 @@ class Agent(FlaskView):
 
         igh = InfrastructureGraphHandler(infrastructure_graph)
 
-        k = 3
+        k = 2
 
         placement_decision = {
             "name":   placement_req['sfc_info']['name'],
@@ -155,7 +155,7 @@ class Agent(FlaskView):
 
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         response = requests.post(self.config['environment_controller_ip']+'sfc_request',json=placement_decision, headers=headers)
-        return response.text
+        return response.json()
 
 
 if __name__ == '__main__':

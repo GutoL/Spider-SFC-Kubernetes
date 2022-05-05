@@ -8,6 +8,7 @@ class SfcRequestRepository():
         self.collection_name = 'sfc_request'
     
     def insert_sfc_request(self, sfc_request: dict)-> None:
+        
         try:
             for i in range(len(sfc_request['VNFs'])):
                 # sfc_request['VNFs'][i]['node_name'] = DBRef("nodes", sfc_request['VNFs'][i]['node_name'])
@@ -26,7 +27,7 @@ class SfcRequestRepository():
                     new_path_list.append(sfc_request['flow_entries'][i]['path'][j][0]+'-'+sfc_request['flow_entries'][i]['path'][j][1])
                 
                 sfc_request['flow_entries'][i]['path'] = new_path_list
-
+            
             self.db_manager.insert_data_into_collection(self.collection_name,[sfc_request])
 
         except BulkWriteError as e:
@@ -38,3 +39,6 @@ class SfcRequestRepository():
     
     def get_sfc_by_name(self, name: str):
         self.db_manager.get_data_by_id_or_name(self.collection_name, name, 'name')
+
+    def delete_sfc_request(self, name: str):
+        self.db_manager.delete_collection_data(self.collection_name, name, 'name')

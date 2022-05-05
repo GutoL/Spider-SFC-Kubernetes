@@ -34,8 +34,14 @@ class API(FlaskView):
 
 
     @route('/vnf/<vnf_id>', methods=['GET'])
-    def page(self, vnf_id):
+    def get_vnf(self, vnf_id):
         return self.vnf_template_repository.get_vnf_template_by_id(vnf_id)
+
+    @route("/vnf/<vnf_id>", methods=["DELETE"])
+    def delete_vnf(self, vnf_id):
+        self.vnf_template_repository.delete_vnf_template(vnf_id)
+
+        return "str(response.status_code)"
 
     
     @route('/infra', methods=['GET'])
@@ -64,23 +70,38 @@ class API(FlaskView):
         # placement_req = request.json
         placement_req = json.dumps(request.json, indent=4, default=json_util.default)
 
-        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-
         try:
-            # print(placement_req)
+            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+
             # requests.post(self.config['orchestrator_ip']+'sfc_request', placement_req, headers=headers)
             response = requests.post(self.config['monitor_ip']+'sfc_request', placement_req, headers=headers)
-            return str(response.status_code)
+
+            self.insert_sfc_db(response.json())
+
+            return placement_req
         except:
             print('Error in create the SFC placement')
-            return 'False' # '''
-    
-    @route("/sfc_request/<id>", methods=["DELETE"])
-    def delete_sfc_request(self, id):
-        headers = {'content-type': 'application/json'}
-        response = requests.delete(self.config['environment_controller_ip']+'sfc_request/'+id,headers=headers)
+            return 'placement_req' # '''
         
-        return str(response.status_code)
+    
+    def insert_sfc_db(self, sfc_data):
+        print(sfc_data)
+        self.sfc_request_repository.insert_sfc_request(sfc_data)
+
+    @route('/insert_sfc_request_db', methods=['POST'])
+    def insert_sfc_db_endpoint(self):
+        placement_req = json.dumps(request.json, indent=4, default=json_util.default)
+        self.insert_sfc_db(placement_req)
+        
+    @route("/sfc_request/<name>", methods=["DELETE"])
+    def delete_sfc_request(self, name):
+        
+        self.sfc_request_repository.delete_sfc_request(name)
+
+        # headers = {'content-type': 'application/json'}
+        # response = requests.delete(self.config['environment_controller_ip']+'sfc_request/'+id,headers=headers)
+        
+        return "str(response.status_code)"
         
 
 

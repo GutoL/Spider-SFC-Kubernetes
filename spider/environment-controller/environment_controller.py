@@ -91,7 +91,7 @@ class EnvironmentController(FlaskView):
         
         sfc_json = request.json
 
-        if self.config['create_source_destinaion_apps']:
+        if self.config['create_source_destination_apps']:
             vnfs_to_place_temp = [
 
                 {
@@ -116,7 +116,7 @@ class EnvironmentController(FlaskView):
             vnf_to_place['name'] = vnf['name']
             vnf_to_place['final_vnf_name'] = sfc_json['name']+'-'+vnf['name']
 
-            if update_next_vnf_source and self.config['create_source_destinaion_apps']:
+            if update_next_vnf_source and self.config['create_source_destination_apps']:
                 vnfs_to_place_temp[0]['next_vnf'] = vnf_to_place['final_vnf_name']+'-service'
                 update_next_vnf_source = False
 
@@ -125,7 +125,7 @@ class EnvironmentController(FlaskView):
             vnf_to_place['resources'] = vnf['resources']
             
             if i == len(sfc_json['VNFs'])-1:
-                if self.config['create_source_destinaion_apps']:
+                if self.config['create_source_destination_apps']:
                     last_vnf = False
                 else:
                     last_vnf = True
@@ -180,7 +180,7 @@ class EnvironmentController(FlaskView):
                     else:
                         return 'Error!!!'
         
-        if self.config['create_source_destinaion_apps']:
+        if self.config['create_source_destination_apps']:
             vnfs_to_place.append(
                 {
                     'name':'destination',
@@ -200,7 +200,11 @@ class EnvironmentController(FlaskView):
 
             self._create_k8s_deployment(vnf['final_vnf_name'], vnf['node_name'], vnf['replicas'], vnf['resources'])
 
-        return "ok\n"
+        response = deepcopy(sfc_json)
+        response = response.pop('graph') # we don't need to send graph data
+        
+        return response
+        # return "ok\n"
     
 
     def _get_services_deployments_names(self, sfc_name):
