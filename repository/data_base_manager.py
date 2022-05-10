@@ -49,7 +49,7 @@ class DataBaseManager():
                 data.append(document)
 
             self.close_connection()
-                
+            
             return data
         except BulkWriteError as e:
             pass
@@ -92,13 +92,17 @@ class DataBaseManager():
     def delete_collection_data(self, collection_name: str, value: str, key: str):
 
         try:
+            document = self.get_data_by_id_or_name(collection_name, value, key)
+
             my_db = self.create_connection()
             my_collection = my_db[collection_name]
-
+            
             myquery = {key: value}
             my_collection.delete_one(myquery)
 
             self.close_connection()
+
+            return document
 
         except BulkWriteError as e:
             pass

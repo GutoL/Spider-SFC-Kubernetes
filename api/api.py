@@ -39,9 +39,9 @@ class API(FlaskView):
 
     @route("/vnf/<vnf_id>", methods=["DELETE"])
     def delete_vnf(self, vnf_id):
-        self.vnf_template_repository.delete_vnf_template(vnf_id)
+        vnfs_templates_deleted = self.vnf_template_repository.delete_vnf_template(vnf_id)
 
-        return "str(response.status_code)"
+        return json.dumps(vnfs_templates_deleted, indent=4, default=json_util.default)
 
     
     @route('/infra', methods=['GET'])
@@ -96,12 +96,13 @@ class API(FlaskView):
     @route("/sfc_request/<name>", methods=["DELETE"])
     def delete_sfc_request(self, name):
         
-        self.sfc_request_repository.delete_sfc_request(name)
-
+        sfc_request_deleted = self.sfc_request_repository.delete_sfc_request(name)
+        
+        # # deleting the SFC placed in the kubernetes
         # headers = {'content-type': 'application/json'}
         # response = requests.delete(self.config['environment_controller_ip']+'sfc_request/'+id,headers=headers)
         
-        return "str(response.status_code)"
+        return json.dumps(sfc_request_deleted, indent=4, default=json_util.default)
         
 
 

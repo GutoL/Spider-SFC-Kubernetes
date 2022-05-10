@@ -38,7 +38,7 @@ class SfcRequestRepository():
         return self.db_manager.get_all_collection_data(self.collection_name)
     
     def get_sfc_by_name(self, name: str):
-        self.db_manager.get_data_by_id_or_name(self.collection_name, name, 'name')
+        return self.db_manager.get_data_by_id_or_name(self.collection_name, name, 'name')
 
     def delete_sfc_request(self, name: str):
-        self.db_manager.delete_collection_data(self.collection_name, name, 'name')
+        return self.db_manager.delete_collection_data(self.collection_name, name, 'name')

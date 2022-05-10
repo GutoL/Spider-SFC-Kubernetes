@@ -24,4 +24,4 @@ class VnfTemplateRepository():
         self.db_manager.update_collection_data(self.collection_name, '_id', id, new_data)
 
     def delete_vnf_template(self, id: str):
-        self.db_manager.delete_collection_data(self.collection_name, id, '_id')
+        return self.db_manager.delete_collection_data(self.collection_name, id, '_id')
