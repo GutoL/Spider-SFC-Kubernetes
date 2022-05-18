@@ -96,14 +96,16 @@ class API(FlaskView):
     @route("/sfc_request/<name>", methods=["DELETE"])
     def delete_sfc_request(self, name):
         
-        sfc_request_deleted = self.sfc_request_repository.delete_sfc_request(name)
-        
-        # # deleting the SFC placed in the kubernetes
-        # headers = {'content-type': 'application/json'}
-        # response = requests.delete(self.config['environment_controller_ip']+'sfc_request/'+id,headers=headers)
-        
-        return json.dumps(sfc_request_deleted, indent=4, default=json_util.default)
-        
+        try:
+            sfc_request_deleted = self.sfc_request_repository.delete_sfc_request(name)
+            
+            # deleting the SFC placed in the kubernetes
+            headers = {'content-type': 'application/json'}
+            requests.delete(self.config['environment_controller_ip']+'sfc_request/'+str(name),headers=headers)
+            
+            return json.dumps(sfc_request_deleted, indent=4, default=json_util.default)
+        except:
+            print('Error in SFC placement deletion...')
 
 
 if __name__ == '__main__':
