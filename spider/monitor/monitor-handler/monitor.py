@@ -50,7 +50,7 @@ class Monitor(FlaskView):
                 }
 
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        response = requests.post(self.config['agent_ip']+'sfc_request',json=data, headers=headers)
+        response = requests.post(self.config['agent_ip']+'sfc_request', json=data, headers=headers)
         return response
 
 if __name__ == '__main__':

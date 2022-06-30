@@ -32,10 +32,40 @@ class Agent(FlaskView):
                 return graph.nodes[node]['id']
         return name
 
+    def _update_link_with_prediction(self, infra_graph, sfc_id):
+
+        url = self.config['predicion_module_ip'] # 'http://127.0.0.1:5000/predict/'
+
+        response = requests.get(url+sfc_id)
+        links = response.json()['physical_links'] # {'physical_links': [[0, 1], [1, 10]], 'prediction': 29.411865207149972}
+        prediction = response.json()['prediction']
+
+        links_attr = {tuple(link): {'bandwidth':prediction} for link in links}
+        nx.set_edge_attributes(infra_graph, links_attr)
+        
+        return infra_graph
+    
+    def _define_placement(self, obs):
+        
+        # candidate = 0
+        # redundancy = random.randint(0,1)  
+        # return candidate, redundancy
+        
+        url = self.config['placement_planner_ip'] # 'http://127.0.0.1:5000/predict/'
+
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+
+        data = {'obs': obs.tolist()}
+
+        response = requests.post(url, json=data, headers=headers)
+        response = response.json()
+
+        return response['candidate'], response['redundancy']
+
     # @route('/placement', methods=['POST'])
     # def place_vnf(self)-> dict:
     #    placement_req = request.json
-    def place_vnf(self, placement_req)-> dict:    
+    def place_vnf(self, placement_req, update_links_status=False)-> dict:    
         infrastructure_graph = InfrastructureGraph(placement_req['graph']['nodes'], placement_req['graph']['edges'])
 
         # print('################')
@@ -46,6 +76,10 @@ class Agent(FlaskView):
         # for e in infrastructure_graph.edges:
         #     print(e, infrastructure_graph.edges[e])
         # print('-------------')
+
+        if update_links_status:
+            infrastructure_graph = self._update_link_with_prediction(infra_graph=infrastructure_graph, sfc_id=placement_req['sfc_info']['name'])
+
 
         igh = InfrastructureGraphHandler(infrastructure_graph)
 
@@ -140,15 +174,6 @@ class Agent(FlaskView):
         
         return placement_decision
     
-    def _define_placement(self, obs):
-        # number_of_candidate_nodes = int((len(obs)-4)/4)-1
-        # candidate = random.randint(0,number_of_candidate_nodes)
-        candidate = 0
-
-        redundancy = random.randint(0,1)
-
-        return candidate, redundancy
-
     @route('/sfc_request', methods=['POST'])
     def create_sfc(self)-> str:
         placement_decision = self.place_vnf(request.json)
