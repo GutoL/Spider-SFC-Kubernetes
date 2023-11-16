@@ -1,4 +1,4 @@
-# k8s-SFC
+# SFC using Kubernetes
 
 To setup the environment with four nodes:
 
