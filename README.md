@@ -77,3 +77,23 @@ python3 daemon/daemon.py
 ```bash
   curl -X POST -H "Content-Type: application/json" -d @orchestrator/sfc-request-image.json http://192.168.0.209:4996/sfc
 ```
+
+## Cite our work
+If you use this code in your work, please consider citing our article:
+
+```BibTeX
+@article{santos2023spider,
+  title={SPIDER: An availability-aware framework for the service function chain placement in distributed scenarios},
+  author={Santos, Guto Leoni and Endo, Patricia Takako and Sadok, Djamel and Kelner, Judith},
+  journal={Software: Practice and Experience},
+  volume={53},
+  number={2},
+  pages={413--437},
+  year={2023},
+  publisher={Wiley Online Library}
+}
+```
+```txt
+Santos, G. L., Endo, P. T., Sadok, D., & Kelner, J. (2023). SPIDER: An availability‐aware framework for the service function chain placement in distributed scenarios. Software: Practice and Experience, 53(2), 413-437.
+```
+
